@@ -2,6 +2,7 @@
 
 ## Presentado por
 - Nicolás Alejandro Leiva Aguilar
+- Ricardo Andres Pasten Oblitas
 
 ## Índice
 1. [Descripción general del sistema](#descripción-general-del-sistema)
