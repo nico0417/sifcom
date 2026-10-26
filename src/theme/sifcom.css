@@ -175,26 +175,31 @@ ion-tabs {
 .sifcom-form ion-select,
 .sifcom-form ion-textarea {
   --background: #ffffff;
-  --color: #222222;
-  --placeholder-color: #888888;
+  --color: #111111;
+  --placeholder-color: #777777;
+  --placeholder-opacity: 1;
   --padding-start: 14px;
   --padding-end: 14px;
   --border-radius: 12px;
-  --highlight-color-focused: transparent;
-  --ion-text-color: #222222;
+  --highlight-height: 0;
+  --highlight-color-focused: #111111;
+  --highlight-color-valid: #111111;
+  --highlight-color-invalid: #e53935;
+  --highlight-color: #111111;
+  --ion-text-color: #111111;
   background: #ffffff;
-  color: #222222;
-  caret-color: #222222;
+  color: #111111;
+  caret-color: #111111;
   border-radius: 12px;
   margin: 0 0 4px;
   min-height: 44px;
   color-scheme: light;
 }
 
-.sifcom-form ion-input::part(native),
-.sifcom-form ion-textarea::part(native) {
-  color: #222222 !important;
-  -webkit-text-fill-color: #222222 !important;
+.sifcom-form ion-input input.native-input,
+.sifcom-form ion-textarea textarea.native-textarea {
+  color: #111111 !important;
+  -webkit-text-fill-color: #111111 !important;
   caret-color: #111111 !important;
 }
 
@@ -316,9 +321,15 @@ ion-tabs {
   --color: #111111;
   --ion-text-color: #111111;
   --placeholder-color: #777777;
+  --placeholder-opacity: 1;
   --padding-start: 12px;
   --padding-end: 12px;
   --border-radius: 10px;
+  --highlight-height: 0;
+  --highlight-color-focused: #111111;
+  --highlight-color-valid: #111111;
+  --highlight-color-invalid: #e53935;
+  --highlight-color: #111111;
   background: #ffffff;
   color: #111111;
   caret-color: #111111;
@@ -327,7 +338,7 @@ ion-tabs {
   color-scheme: light;
 }
 
-.sifcom-item ion-input.sifcom-edit-input::part(native) {
+.sifcom-item ion-input.sifcom-edit-input input.native-input {
   color: #111111 !important;
   -webkit-text-fill-color: #111111 !important;
   caret-color: #111111 !important;
@@ -436,21 +447,28 @@ ion-tabs {
 .perfil-card ion-input,
 .perfil-card ion-select {
   --background: #f0f0f0;
-  --color: #222222;
-  --placeholder-color: #9a9a9a;
+  --color: #111111;
+  --placeholder-color: #777777;
+  --placeholder-opacity: 1;
   --padding-start: 16px;
   --padding-end: 16px;
-  --highlight-color-focused: transparent;
-  --ion-text-color: #222222;
+  --highlight-height: 0;
+  --highlight-color-focused: #111111;
+  --highlight-color-valid: #111111;
+  --highlight-color-invalid: #e53935;
+  --highlight-color: #111111;
+  --ion-text-color: #111111;
   background: #f0f0f0;
+  color: #111111;
+  caret-color: #111111;
   border-radius: 12px;
   min-height: 44px;
   color-scheme: light;
 }
 
-.perfil-card ion-input::part(native) {
-  color: #222222 !important;
-  -webkit-text-fill-color: #222222 !important;
+.perfil-card ion-input input.native-input {
+  color: #111111 !important;
+  -webkit-text-fill-color: #111111 !important;
   caret-color: #111111 !important;
 }
 

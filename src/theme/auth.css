@@ -70,15 +70,16 @@
   --padding-start: 16px;
   --padding-end: 16px;
   --highlight-height: 0;
-  --highlight-color-focused: transparent;
-  --highlight-color-valid: transparent;
-  --highlight-color-invalid: transparent;
+  --highlight-color-focused: #111111;
+  --highlight-color-valid: #111111;
+  --highlight-color-invalid: #e53935;
+  --highlight-color: #111111;
   --border-width: 0;
   --box-shadow: none;
 }
 
-.auth-card ion-input::part(native),
-.auth-card ion-input input.native-input {
+.auth-card ion-input input.native-input,
+.auth-card ion-input .native-input {
   color: #111111 !important;
   -webkit-text-fill-color: #111111 !important;
   caret-color: #111111 !important;
