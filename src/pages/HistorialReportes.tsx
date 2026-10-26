@@ -1,4 +1,4 @@
-import { IonInput } from '@ionic/react';
+import { IonInput, IonSelect, IonSelectOption } from '@ionic/react';
 import { useCallback, useEffect, useState } from 'react';
 import AppShell from '../components/AppShell';
 import { useAuth } from '../context/AuthContext';
@@ -12,6 +12,24 @@ import {
 } from '../services/api';
 import { formatDate, nivelEstado } from '../utils/format';
 
+const ESTADOS_REPORTE = [
+  { value: 'CUMPLE', label: 'Cumple / Sin observaciones' },
+  { value: 'ALERTA', label: 'Alerta de incumplimiento' },
+  { value: 'MULTA', label: 'Multa aplicada' },
+];
+
+const normalizarEstadoSelect = (estado: string) => {
+  const nivel = nivelEstado(estado);
+  if (nivel === 'multa') return 'MULTA';
+  if (nivel === 'alerta') return 'ALERTA';
+  return 'CUMPLE';
+};
+
+const etiquetaEstado = (estado: string) => {
+  const norm = normalizarEstadoSelect(estado);
+  return ESTADOS_REPORTE.find((e) => e.value === norm)?.label || estado;
+};
+
 const HistorialReportes: React.FC = () => {
   const { user } = useAuth();
   const esAdmin = user?.rol === 'admin';
@@ -20,6 +38,7 @@ const HistorialReportes: React.FC = () => {
   const [editId, setEditId] = useState<number | null>(null);
   const [obra, setObra] = useState('');
   const [obs, setObs] = useState('');
+  const [estadoEdit, setEstadoEdit] = useState('ALERTA');
 
   const cargar = useCallback(async () => {
     try {
@@ -46,7 +65,7 @@ const HistorialReportes: React.FC = () => {
         Foto: item.Foto,
         Observaciones: obs,
         FechaFisc: item.FechaFisc,
-        Estado: item.Estado,
+        Estado: estadoEdit,
         IdUser: item.IdUser,
         IdContrato: item.IdContrato,
       });
@@ -88,20 +107,45 @@ const HistorialReportes: React.FC = () => {
                 </p>
                 {r.ChecklistResumen && <p>Checklist: {r.ChecklistResumen} cumplidos</p>}
                 {editId === r.IdFiscalizacion ? (
-                  <>
-                    <IonInput value={obra} onIonInput={(e) => setObra(e.detail.value ?? '')} />
-                    <IonInput value={obs} onIonInput={(e) => setObs(e.detail.value ?? '')} />
+                  <div className="sifcom-edit-box">
+                    <label className="sifcom-edit-label">Asunto / Lugar</label>
+                    <IonInput
+                      className="sifcom-edit-input"
+                      placeholder="Asunto o lugar"
+                      value={obra}
+                      onIonInput={(e) => setObra(e.detail.value ?? '')}
+                    />
+                    <label className="sifcom-edit-label">Observaciones</label>
+                    <IonInput
+                      className="sifcom-edit-input"
+                      placeholder="Observaciones"
+                      value={obs}
+                      onIonInput={(e) => setObs(e.detail.value ?? '')}
+                    />
+                    <label className="sifcom-edit-label">Estado del reporte</label>
+                    <IonSelect
+                      className="sifcom-edit-select"
+                      interface="popover"
+                      value={estadoEdit}
+                      onIonChange={(e) => setEstadoEdit(e.detail.value)}
+                    >
+                      {ESTADOS_REPORTE.map((op) => (
+                        <IonSelectOption key={op.value} value={op.value}>
+                          {op.label}
+                        </IonSelectOption>
+                      ))}
+                    </IonSelect>
                     <div className="sifcom-item-actions">
                       <button type="button" onClick={() => void guardar(r)}>Guardar</button>
                       <button type="button" onClick={() => setEditId(null)}>Cancelar</button>
                     </div>
-                  </>
+                  </div>
                 ) : (
                   <>
                     {r.Observaciones && <p>{r.Observaciones}</p>}
                     <p className="sifcom-status">
                       <span className={`dot dot-${nivel}`} />
-                      {r.Estado}
+                      {etiquetaEstado(r.Estado)}
                     </p>
                     {esAdmin && (
                       <div className="sifcom-item-actions">
@@ -111,6 +155,7 @@ const HistorialReportes: React.FC = () => {
                             setEditId(r.IdFiscalizacion);
                             setObra(r.Obra);
                             setObs(r.Observaciones || '');
+                            setEstadoEdit(normalizarEstadoSelect(r.Estado));
                           }}
                         >
                           Editar

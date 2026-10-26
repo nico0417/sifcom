@@ -296,6 +296,47 @@ ion-tabs {
   font-size: 0.78rem;
 }
 
+.sifcom-edit-box {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.sifcom-edit-label {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #2f4742;
+  margin-top: 2px;
+}
+
+.sifcom-item ion-input.sifcom-edit-input,
+.sifcom-item ion-select.sifcom-edit-select {
+  --background: #ffffff;
+  --color: #111111;
+  --ion-text-color: #111111;
+  --placeholder-color: #777777;
+  --padding-start: 12px;
+  --padding-end: 12px;
+  --border-radius: 10px;
+  background: #ffffff;
+  color: #111111;
+  caret-color: #111111;
+  border-radius: 10px;
+  min-height: 40px;
+  color-scheme: light;
+}
+
+.sifcom-item ion-input.sifcom-edit-input::part(native) {
+  color: #111111 !important;
+  -webkit-text-fill-color: #111111 !important;
+  caret-color: #111111 !important;
+}
+
+.sifcom-item ion-select.sifcom-edit-select::part(text) {
+  color: #111111;
+}
+
 .sifcom-item-actions {
   display: flex;
   gap: 10px;
