@@ -193,8 +193,9 @@ ion-tabs {
 
 .sifcom-form ion-input::part(native),
 .sifcom-form ion-textarea::part(native) {
-  color: #222222;
-  -webkit-text-fill-color: #222222;
+  color: #222222 !important;
+  -webkit-text-fill-color: #222222 !important;
+  caret-color: #111111 !important;
 }
 
 .sifcom-form ion-select::part(text) {
@@ -407,8 +408,9 @@ ion-tabs {
 }
 
 .perfil-card ion-input::part(native) {
-  color: #222222;
-  -webkit-text-fill-color: #222222;
+  color: #222222 !important;
+  -webkit-text-fill-color: #222222 !important;
+  caret-color: #111111 !important;
 }
 
 .perfil-card .permiso-locked {

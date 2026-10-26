@@ -19,13 +19,16 @@
 
 .auth-card {
   background: #fff;
+  color: #111111;
   border-radius: 24px;
   padding: 24px 20px 28px;
+  color-scheme: light;
 }
 
 .auth-card h1 {
   margin: 0;
   font-size: 1.6rem;
+  color: #111111;
 }
 
 .auth-subtitle,
@@ -53,9 +56,16 @@
   min-height: 48px;
   margin: 0 0 8px;
   background: #f0f0f0;
+  color: #111111;
+  caret-color: #111111;
+  color-scheme: light;
   border-radius: 12px;
   overflow: hidden;
   --background: #f0f0f0;
+  --color: #111111;
+  --ion-text-color: #111111;
+  --placeholder-color: #777777;
+  --placeholder-opacity: 1;
   --border-radius: 12px;
   --padding-start: 16px;
   --padding-end: 16px;
@@ -65,6 +75,26 @@
   --highlight-color-invalid: transparent;
   --border-width: 0;
   --box-shadow: none;
+}
+
+.auth-card ion-input::part(native),
+.auth-card ion-input input.native-input {
+  color: #111111 !important;
+  -webkit-text-fill-color: #111111 !important;
+  caret-color: #111111 !important;
+}
+
+.auth-card ion-select::part(text) {
+  color: #111111;
+}
+
+.auth-card ion-select::part(placeholder) {
+  color: #777777;
+}
+
+.auth-card ion-input.has-focus {
+  outline: 2px solid #3d5473;
+  outline-offset: -2px;
 }
 
 .auth-card ion-input.input-error,
