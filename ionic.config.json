@@ -1,0 +1,7 @@
+{
+  "name": "sifcom-frontend",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}
