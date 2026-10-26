@@ -2,48 +2,63 @@
 
 ## Presentado por
 - Nicolás Alejandro Leiva Aguilar
-- Ricardo Andres Pasten Oblitas
+- Ricardo Andrés Pastén Oblitas
+
+### Distribución de responsabilidades
+
+| Integrante | Rol en el equipo | Responsabilidades principales |
+|---|---|---|
+| **Nicolás Alejandro Leiva Aguilar** | Arquitectura Full-Stack, Base de Datos y Seguridad | Configuración de Ionic + React y enrutador protegido por roles, diseño e implementación de la base de datos relacional (`schema.sql`), construcción del servidor Node.js + Express, autenticación con `bcrypt` y `JWT`, y controles de seguridad OWASP API 2023. |
+| **Ricardo Andrés Pastén Oblitas** | Diseño UI/UX, Modelado MER e Integración | Elaboración manual de prototipos web y móvil en Figma, diseño del Modelo Entidad-Relación (MER), implementación de vistas adaptables (`Login`, `Register`, `Home`, `NuevaFiscalizacion`, `Contratos`, `HistorialReportes`, `Trazabilidad`, `Perfil`) y pruebas funcionales. |
+
+---
 
 ## Índice
 1. [Descripción general del sistema](#descripción-general-del-sistema)
-2. [Justificación del problema](#justificación-del-problema)
-3. [Objetivos del proyecto](#objetivos-del-proyecto)
-4. [Usuarios objetivo](#usuarios-objetivo-quién-usará-la-aplicación)
-5. [Roles del sistema](#roles-del-sistema)
+2. [Organización de las ramas del repositorio](#organización-de-las-ramas-del-repositorio)
+3. [Justificación del problema](#justificación-del-problema)
+4. [Objetivos del proyecto](#objetivos-del-proyecto)
+5. [Usuarios objetivo y Roles del sistema](#usuarios-objetivo-quién-usará-la-aplicación)
 6. [Proto-personas](#proto-personas)
-7. [Requerimientos](#requerimientos)
-    - [Requerimientos funcionales por rol](#requerimientos-funcionales-por-rol)
-    - [Funcionalidades transversales](#funcionalidades-transversales)
-    - [Requerimientos no funcionales](#requerimientos-no-funcionales)
+7. [Requerimientos del sistema](#requerimientos)
 8. [Arquitectura de Navegación / UX](#arquitectura-de-navegación)
-    - [Rutas principales y secundarias](#1-rutas-principales-y-secundarias)
-    - [Relaciones jerárquicas entre vistas](#2-relaciones-jerárquicas-entre-vistas)
-    - [Diferenciación de acceso por roles](#3-diferenciación-de-acceso-según-roles)
-    - [Flujos de tareas](#4-flujos-de-tareas)
-    - [Puntos críticos de interacción](#5-puntos-críticos-de-interacción)
-    - [Justificación técnica](#6-justificación-técnica)
-9. [Bocetos UI/UX](#bocetos-uiux)
+9. [Bocetos UI/UX (Figma) y Modelo Entidad-Relación (MER)](#bocetos-uiux-y-modelo-de-datos)
 10. [Tecnologías y herramientas](#tecnologías-y-herramientas)
+11. [Instrucciones rápidas de instalación y ejecución](#instrucciones-de-instalación-y-ejecución)
 
 ---
 
 ## Descripción general del sistema
 
-**SIFCOM** (Sistema de Fiscalización de Contratos Municipales) es una plataforma compuesta por una aplicación **móvil** (para inspectores municipales) y una aplicación **web** (para administradores municipales) que permite digitalizar, estandarizar y georreferenciar la supervisión en terreno de contratos de servicios externalizados (recolección de basura, mantenimiento de áreas verdes, obras, entre otros).
+**SIFCOM** (Sistema de Fiscalización en Terreno de Contratos Municipales) es una plataforma compuesta por una aplicación **móvil y web adaptable** (desarrollada en **Ionic con React y TypeScript**) conectada a una **API RESTful** (desarrollada en **Node.js, Express y PostgreSQL**), que permite digitalizar, estandarizar y georreferenciar la supervisión en terreno de contratos municipales de servicios externalizados (mantención de áreas verdes, recolección de aseo, alumbrado público y obras de remodelación).
 
-La aplicación centraliza en tiempo real la evidencia recogida por los inspectores (checklists, fotografías georreferenciadas y observaciones) para que los administradores municipales puedan monitorear el cumplimiento contractual, generar alertas ante incumplimientos y respaldar con evidencia la aplicación de multas o la evaluación de futuras licitaciones.
+La plataforma centraliza la evidencia levantada por los inspectores municipales (*checklists*, fotografías con coordenadas GPS y observaciones) para que los administradores municipales monitoreen el cumplimiento contractual, visualicen el presupuesto ejecutado junto a las multas por categoría y respalden con evidencia la aplicación de multas o la evaluación de futuras licitaciones.
+
+---
+
+## Organización de las ramas del repositorio
+
+De acuerdo con los lineamientos de la asignatura **Ingeniería Web y Móvil**, el desarrollo del proyecto se estructura en tres ramas dentro de este repositorio público:
+
+| Rama | Propósito y contenido principal |
+|---|---|
+| **`main`** | Documentación general integrada del proyecto, visión arquitectónica completa, prototipos UI/UX, Modelo Entidad-Relación (MER) e instrucciones globales de puesta en marcha. |
+| **`frontend`** | Código fuente completo de la interfaz de usuario en **Ionic + React (TypeScript)** estructurado en `pages`, `components`, `routes`, `services` e `interfaces`, junto con la especificación detallada de requerimientos funcionales, no funcionales y arquitectura UX. |
+| **`backend`** | Servidor **API REST en Node.js + Express**, conexión a **PostgreSQL**, archivo reproducible **`schema.sql`** (DDL + PK/FK + datos iniciales), autenticación **JWT + bcrypt**, controles **OWASP API Security 2023 (`API1`, `API2`, `API4`, `API8`, `API9`)** y colección de pruebas para Postman/Insomnia. |
 
 ---
 
 ## Justificación del problema
 
-A nivel municipal, existe una carencia generalizada para medir la eficiencia y el impacto de la gestión, lo que impide la toma de decisiones basada en evidencia. Uno de los focos más críticos son los problemas en la gestión de contratos de servicios externalizados (ej. recolección de basura, mantenimiento de áreas verdes, obras).
+A nivel municipal, existe una carencia generalizada para medir la eficiencia y el impacto de la gestión en terreno, lo que impide la toma de decisiones basada en evidencia. Uno de los focos más críticos son los problemas en la supervisión de contratos de servicios externalizados (recolección de basura, mantenimiento de áreas verdes, obras civiles e iluminación pública).
 
-Las municipalidades enfrentan graves dificultades para supervisar y controlar eficazmente la calidad de estos servicios en terreno, lo que deriva en un mal servicio entregado a la ciudadanía a pesar de los altos costos financieros invertidos.
+Las municipalidades enfrentan graves dificultades para supervisar y controlar eficazmente la calidad de estos servicios en terreno cuando los registros se llevan en papel o medios informales, lo que deriva en un servicio deficiente entregado a la ciudadanía a pesar de los altos costos financieros invertidos.
 
-En este contexto, el problema abordado por el proyecto corresponde a la necesidad de digitalizar, estandarizar y georreferenciar la recolección de evidencia empírica en terreno, consolidando esta información en tiempo real para facilitar la aplicación de multas justificadas o mejoras en las licitaciones. El desarrollo de una plataforma web (para administración) y móvil (para inspectores) permitirá centralizar la gestión y garantizar la transparencia del cumplimiento de los contratos.
+En este contexto, **SIFCOM** aborda la necesidad de digitalizar, estandarizar y georreferenciar la recolección de evidencia empírica en terreno, vinculando cada inspección con su contrato, inspector responsable, lista de verificación y multas asociadas.
 
-> Fuentes: Guía Metodológica de Calidad de Servicio del Ministerio de Hacienda; documentación sobre Desafíos Públicos Locales.
+### Fuentes secundarias de respaldo
+1. **Ministerio de Hacienda y Laboratorio de Gobierno (2023):** *Guía Metodológica para medir la Calidad de Servicio y la Experiencia Usuaria en el Estado* (Circular N° 34 / Sistema de Calidad de Servicio). Disponible en: `https://calidaddeservicio.gob.cl/`.
+2. **Centro de Transformación Digital (CTD) — Municipalidad de Santo Domingo (2025):** *Desafíos Públicos Locales: Supervisión y control en terreno de contratos municipales externalizados*.
 
 ---
 
@@ -53,68 +68,39 @@ En este contexto, el problema abordado por el proyecto corresponde a la necesida
 Desarrollar una plataforma web y móvil que permita digitalizar y centralizar la fiscalización en terreno de contratos municipales, facilitando la trazabilidad de la evidencia y la toma de decisiones basada en datos.
 
 ### Objetivos específicos
-- Permitir a los inspectores completar checklists de fiscalización y capturar evidencia fotográfica georreferenciada directamente desde el dispositivo móvil.
-- Consolidar en un panel administrativo el nivel de cumplimiento de los contratos vigentes, con alertas automáticas ante incumplimientos.
-- Garantizar la trazabilidad de las fiscalizaciones realizadas, permitiendo su consulta por fecha, contrato o inspector.
-- Diferenciar el acceso y las funcionalidades disponibles según el rol del usuario autenticado (inspector / administrador).
-- Reducir el tiempo y la dependencia de registros en papel durante el proceso de fiscalización en terreno.
+- Permitir a los inspectores completar listas de verificación (*checklists*) y adjuntar evidencia fotográfica georreferenciada desde su dispositivo móvil o computador.
+- Consolidar en un panel administrativo (*dashboard*) el presupuesto de contratos vigentes y las multas acumuladas por categoría.
+- Garantizar la trazabilidad de las fiscalizaciones y multas registradas sobre cada contrato.
+- Diferenciar el acceso, las vistas y los endpoints disponibles según el rol del usuario autenticado (`INSPECTOR` / `ADMIN`).
+- Proteger la información mediante cifrado de contraseñas (`bcrypt`), tokens `JWT` y controles de seguridad API REST.
 
 ---
 
 ## Usuarios objetivo (Quién usará la aplicación)
 
-La aplicación considera dos grupos principales de usuarios: **Inspectores en Terreno** y **Administradores Municipales**.
+### Inspectores en Terreno (`INSPECTOR`)
+Son el personal operativo desplegado en la comuna. Requieren interfaces rápidas, intuitivas y adaptadas para su uso en exteriores con controles táctiles amplios (`>= 44x44 CSS px`). Necesitan reducir el tiempo dedicado a redactar informes en papel y agilizar la captura de pruebas (checklist, fotos y GPS).
 
-### Inspectores en Terreno
-Son el personal operativo desplegado en la comuna. Requieren interfaces rápidas, intuitivas y adaptadas para su uso en exteriores, a menudo bajo condiciones de luz solar intensa o **conectividad intermitente**. Necesitan reducir el tiempo que dedican a redactar informes en papel y agilizar la captura de pruebas (fotos y GPS).
-
-### Administradores Municipales
-Son los encargados de gestionar los presupuestos y evaluar a las empresas contratistas. Operan desde oficinas gubernamentales utilizando computadores de escritorio. Necesitan visualizar datos consolidados, métricas de cumplimiento y recibir alertas tempranas sobre servicios deficientes para tomar decisiones estratégicas.
-
----
-
-## Roles del Sistema
-
-- **Inspector en Terreno**: usuario móvil encargado de acudir a los puntos de la comuna, completar checklists y levantar evidencia fotográfica.
-- **Administrador Municipal**: usuario web encargado de crear pautas, asignar fiscalizaciones y monitorear el desempeño global de los contratos.
+### Administradores Municipales (`ADMIN`)
+Son los encargados de gestionar los contratos vigentes, evaluar a las empresas contratistas y auditar las multas aplicadas. Operan principalmente desde computadores de escritorio en oficinas municipales (y ocasionalmente desde móvil), requiriendo datos consolidados, métricas presupuestarias y alertas claras de incumplimiento.
 
 ---
 
 ## Proto-personas
 
-> Nota: las siguientes proto-personas corresponden a caracterizaciones preliminares basadas en fuentes secundarias (Guía Metodológica de Calidad de Servicio del Ministerio de Hacienda y Desafíos Públicos Locales) y **no representan resultados de entrevistas a usuarios reales**.
+> **Nota:** Las siguientes *proto-personas* corresponden a caracterizaciones preliminares basadas en fuentes secundarias (*Guía Metodológica de Calidad de Servicio* y *Desafíos Públicos Locales*) y supuestos razonados de diseño; **no representan resultados de entrevistas a usuarios reales**.
 
-### Proto-persona 1: El Inspector Operativo
+### Proto-persona 1: El Inspector Operativo (`Carlos`, 45 años — Rol: `Inspector`)
+- **Características y contexto:** Funcionario municipal que realiza sus rondas en camioneta o a pie. Acostumbra llevar registros en libretas, lo que retrasa su flujo de trabajo.
+- **Necesidades y objetivos:** Reportar el estado de un servicio in situ mediante toques rápidos en pantalla, marcar ítems de cumplimiento y adjuntar fotografías con ubicación GPS como prueba respaldada.
+- **Puntos de frustración:** Perder anotaciones, lidiar con interfaces móviles complejas al sol, o que los contratistas rechacen las observaciones por falta de pruebas concretas.
+- **Funcionalidades que utiliza:** Inicio de sesión, `Nueva Fiscalización`, `Historial de Reportes` propios y `Perfil`.
 
-**Nombre ficticio:** Carlos
-**Tipo de usuario o rol:** Inspector en Terreno
-
-**Características generales:** funcionario de 45 años. Realiza sus rondas en camioneta o a pie. Acostumbra llevar registros en libretas, lo que retrasa su flujo de trabajo.
-
-**Necesidades principales:** reportar el estado de un servicio in situ mediante toques rápidos en la pantalla, sin escribir textos largos.
-
-**Objetivos de uso:** validar el estado de los servicios, tomar fotografías como prueba irrefutable y terminar su ruta eficientemente.
-
-**Dificultades o puntos de frustración:** perder anotaciones, lidiar con interfaces móviles complejas al sol, o que los contratistas rechacen las multas por falta de pruebas concretas.
-
-**Dispositivo y contexto:** smartphone corporativo de gama media, uso al aire libre.
-
----
-
-### Proto-persona 2: La Estratega Administrativa
-
-**Nombre ficticio:** Valeria
-**Tipo de usuario o rol:** Administrador Municipal
-
-**Características generales:** jefa de Departamento de 38 años. Debe rendir cuentas sobre el presupuesto invertido en licitaciones y responder a los reclamos ciudadanos.
-
-**Necesidades principales:** tener una vista panorámica y en tiempo real del cumplimiento de las empresas externas.
-
-**Objetivos de uso:** configurar checklists, monitorear el rendimiento mediante dashboards y justificar la aplicación de sanciones con evidencia clara.
-
-**Dificultades o puntos de frustración:** recibir reclamos por servicios no prestados y carecer de información centralizada para verificar si la empresa realmente ejecutó el trabajo.
-
-**Dispositivo y contexto:** computador de escritorio en oficina municipal.
+### Proto-persona 2: La Estratega Administrativa (`Valeria`, 38 años — Rol: `Administrador Municipal`)
+- **Características y contexto:** Jefa de unidad técnica municipal en oficina. Debe rendir cuentas sobre el presupuesto invertido en contratos externalizados y respaldar sanciones.
+- **Necesidades y objetivos:** Tener una vista panorámica del cumplimiento de las empresas externas, mantener el catastro de contratos vigentes y auditar la trazabilidad de reportes y multas.
+- **Puntos de frustración:** Recibir reclamos por servicios no prestados y carecer de información centralizada para verificar si la empresa ejecutó el trabajo.
+- **Funcionalidades que utiliza:** `Dashboard de Inicio`, `Contratos` (CRUD), `Historial y Trazabilidad`, `Panel de Administración`, `Nueva Fiscalización` e `Historial de Reportes`.
 
 ---
 
@@ -122,184 +108,121 @@ Son los encargados de gestionar los presupuestos y evaluar a las empresas contra
 
 ### Requerimientos funcionales por rol
 
-| ID | Requerimiento funcional | Rol |
-|---|---|---|
-| **RF-01** | El sistema debe permitir crear listas de verificación (checklists) dinámicas y asignarlas a contratos específicos. | Administrador |
-| **RF-02** | El sistema debe proveer un panel de control (dashboard) que consolide el nivel de cumplimiento global y el estado de los contratos. | Administrador |
-| **RF-03** | El sistema debe generar alertas visuales automáticas cuando una fiscalización obtenga un porcentaje de cumplimiento inferior al umbral definido. | Administrador |
-| **RF-04** | El sistema debe permitir completar las pautas asignadas marcando el estado de cumplimiento de cada ítem desde la aplicación móvil. | Inspector |
-| **RF-05** | El sistema debe permitir capturar fotografías georreferenciadas (GPS) y anexarlas automáticamente a un ítem fiscalizado. | Inspector |
-| **RF-06** | El sistema debe permitir ingresar comentarios u observaciones breves in situ para detallar irregularidades encontradas. | Inspector |
-| **RF-07** | El sistema debe permitir consultar el historial y trazabilidad de inspecciones filtrando por fecha, contrato o inspector. | Ambos |
+| ID | Nombre | Descripción (Producto + Verbo + Necesidad) | Rol |
+|---|---|---|---|
+| **RF-01** | Registrar contratos municipales | **SIFCOM** registra los contratos municipales vigentes indicando empresa adjudicada, giro o nombre del servicio, presupuesto asignado y fecha de vigencia para mantener actualizado el catastro de servicios supervisados. | Administrador |
+| **RF-02** | Actualizar y mantener contratos | **SIFCOM** actualiza la información de los contratos municipales existentes o los elimina del catastro activo para reflejar modificaciones contractuales o términos de vigencia. | Administrador |
+| **RF-03** | Visualizar dashboard presupuestario y de multas | **SIFCOM** presenta un panel de control gráfico con la proporción de presupuesto utilizado frente al disponible y el monto de multas acumuladas por categoría para apoyar el monitoreo estratégico municipal. | Administrador |
+| **RF-04** | Identificar alertas de incumplimiento por contrato | **SIFCOM** calcula y muestra indicadores visuales de estado (*Sin observaciones*, *Alerta de incumplimiento* o *Multa aplicada*) en cada contrato y reporte para priorizar la revisión de empresas con incumplimientos. | Administrador |
+| **RF-05** | Evaluar lista de verificación en terreno | **SIFCOM** registra la evaluación de cada ítem de la lista de verificación (*checklist*) asociada al contrato durante una nueva fiscalización para determinar automáticamente el estado de cumplimiento del servicio. | Inspector / Administrador |
+| **RF-06** | Vincular evidencia fotográfica y georreferenciación | **SIFCOM** asocia la ubicación GPS detectada y el archivo de evidencia fotográfica al reporte de fiscalización para respaldar empíricamente la inspección realizada en terreno. | Inspector / Administrador |
+| **RF-07** | Registrar observaciones de fiscalización | **SIFCOM** almacena el asunto o lugar inspeccionado junto con las observaciones textuales del inspector para detallar las irregularidades o hallazgos detectados en el servicio. | Inspector / Administrador |
+| **RF-08** | Consultar historial de reportes y trazabilidad | **SIFCOM** lista cronológicamente el historial de fiscalizaciones y los registros de trazabilidad con sus multas asociadas según los permisos del usuario para auditar las actuaciones realizadas. | Ambos (Trazabilidad global exclusiva de Administrador) |
 
 ### Funcionalidades transversales
-
-Estas funcionalidades son necesarias para el funcionamiento general de la aplicación, pero no forman parte de los siete requerimientos funcionales principales del dominio.
-
-- **FT-01:** el sistema deberá permitir el registro de usuarios.
-- **FT-02:** el sistema deberá permitir iniciar sesión mediante credenciales.
-- **FT-03:** el sistema deberá restringir las funcionalidades de acuerdo con el rol del usuario autenticado.
+- **FT-01:** SIFCOM permite el registro de nuevas cuentas de inspector con validación de datos.
+- **FT-02:** SIFCOM permite iniciar y cerrar sesión mediante credenciales verificadas con JWT.
+- **FT-03:** SIFCOM restringe las vistas, rutas y operaciones de la API de acuerdo con el rol del usuario autenticado (`INSPECTOR` / `ADMIN`).
+- **FT-04:** SIFCOM permite consultar y actualizar los datos del perfil personal del usuario autenticado.
 
 ### Requerimientos no funcionales
 
-| ID | Categoría | Descripción |
+| ID | Categoría | Descripción y umbral verificable |
 |---|---|---|
-| **RNF-01** | Arquitectura | El frontend debe usar componentes nativos de Ionic y el despliegue general (frontend, backend, BD) debe orquestarse con Docker y Docker-compose. |
-| **RNF-02** | Seguridad | Las contraseñas deben cifrarse con bcrypt y la API debe protegerse mediante autenticación JWT y prevención de SQL Injection. |
-| **RNF-03** | Usabilidad | La interfaz móvil del inspector debe poseer áreas táctiles amplias para facilitar su uso a una sola mano en exteriores. |
-| **RNF-04** | Rendimiento | El tiempo de sincronización de una fiscalización desde el dispositivo a la base de datos no debe superar los 5 segundos bajo conectividad estable. |
-| **RNF-05** | Disponibilidad | La aplicación móvil debe permitir capturar checklists y fotografías **sin conexión a internet**, almacenando la información localmente y sincronizándola automáticamente con el servidor en cuanto se recupere la conectividad, sin pérdida de evidencia. |
+| **RNF-01** | Arquitectura | El frontend debe construirse en **Ionic React (`@ionic/react` v9)** con separación modular (`pages`, `components`, `routes`, `services`, `interfaces`) y el backend en **Node.js + Express** conectado a **PostgreSQL**. |
+| **RNF-02** | Seguridad | Las contraseñas deben cifrarse con **bcrypt (`cost >= 10`)**, exigiendo mínimo **8 caracteres y 1 número**, y la API debe protegerse mediante **JWT (`HS256`, expiración `2h`)**, consultas SQL parametrizadas y controles **OWASP API 2023 (`API1`, `API2`, `API4`, `API8`, `API9`)**. |
+| **RNF-03** | Usabilidad y Accesibilidad | Los controles interactivos deben poseer áreas táctiles mínimas de **`44 x 44 CSS px`**, contraste de texto normal **`>= 4.5:1`** y etiquetas visibles con mensajes de error en línea. |
+| **RNF-04** | Rendimiento | El tiempo de respuesta de las operaciones de lectura y registro de fiscalizaciones no debe superar los **`5 segundos` (`p95 <= 5000 ms`)** bajo red estable, con un límite de payload JSON de **`100 KB`**. |
+| **RNF-05** | Compatibilidad | La interfaz debe adaptarse sin desplazamiento horizontal en resoluciones de **`360 px` (móvil)**, **`768 px` (tablet)** y **`1366 px` (escritorio)** en Chrome, Edge y Firefox. |
 
 ---
 
 ## Arquitectura de Navegación
 
-### 1. Rutas principales y secundarias
-
-**Rutas públicas**
-
-| Ruta | Descripción |
-|---|---|
-| `/login` | Inicio de sesión. |
-| `/registro` | Creación de cuentas. |
-
-**Rutas protegidas (Inspector)**
-
-| Ruta | Descripción |
-|---|---|
-| `/inspector/inicio` | Resumen de pautas asignadas para el día. |
-| `/inspector/pautas` | Listado completo de pautas pendientes. |
-| `/inspector/pautas/:id` | Formulario de checklist y captura de fotos. |
-| `/inspector/historial` | Fiscalizaciones completadas por el usuario. |
-
-**Rutas protegidas (Administrador)**
-
-| Ruta | Descripción |
-|---|---|
-| `/admin/inicio` | Dashboard de métricas y alertas. |
-| `/admin/contratos` | Gestión de empresas y contratos vigentes. |
-| `/admin/pautas` | Creación y asignación de checklists. |
-| `/admin/historial` | Auditoría global de todas las fiscalizaciones. |
-
-### 2. Relaciones jerárquicas entre vistas
-
 ```text
-Aplicación
+Aplicación SIFCOM
 │
 ├── Rutas públicas
-│   ├── Login
-│   └── Registro
+│   ├── /login (Inicio de sesión)
+│   └── /register (Creación de cuenta)
 │
-└── Rutas protegidas
+└── Rutas protegidas (/tabs/*)
     │
-    ├── Inspector
-    │   ├── Inicio (pautas del día)
-    │   ├── Pautas pendientes
-    │   │   └── Detalle de pauta (checklist + fotos GPS)
-    │   └── Historial
+    ├── Inspector y Administrador
+    │   ├── /tabs/home (Dashboard de inicio)
+    │   ├── /tabs/nueva-fiscalizacion (Checklist + GPS + Foto + Observaciones)
+    │   ├── /tabs/historial-reportes (Listado de reportes)
+    │   └── /tabs/perfil (Datos personales y cierre de sesión)
     │
-    └── Administrador
-        ├── Inicio (dashboard de alertas)
-        ├── Contratos
-        ├── Pautas (creación y asignación)
-        └── Historial (auditoría global)
+    └── Exclusivo Administrador (RequireAdmin)
+        ├── /tabs/contratos (Gestión CRUD de contratos vigentes)
+        ├── /tabs/trazabilidad (Auditoría de reportes y multas)
+        └── /tabs/admin (Panel de administración)
 ```
-
-### 3. Diferenciación de acceso según roles
-
-| Funcionalidad | Inspector | Administrador |
-|---|:---:|:---:|
-| Ver pautas asignadas | ✓ | — |
-| Completar checklist | ✓ | — |
-| Capturar foto georreferenciada | ✓ | — |
-| Agregar observaciones | ✓ | — |
-| Ver historial propio | ✓ | — |
-| Crear/editar contratos | — | ✓ |
-| Crear/asignar pautas | — | ✓ |
-| Ver dashboard de cumplimiento | — | ✓ |
-| Auditar historial global | — | ✓ |
-
-**Inspector:** solo tiene acceso a visualizar las pautas que se le han asignado, completarlas, adjuntar fotos y ver su propio historial. No puede crear contratos ni modificar pautas maestras.
-
-**Administrador:** tiene acceso global para gestionar contratos, crear checklists, ver dashboards y auditar a todos los inspectores. No llena pautas en terreno.
-
-### 4. Flujos de tareas
-
-**Task Flow 1: Ejecución de Fiscalización en Terreno (Inspector)**
-
-```text
-Inicio de sesión
-      ↓
-Ver pautas del día
-      ↓
-Seleccionar pauta pendiente
-      ↓
-Marcar ítems (Cumple / No Cumple)
-      ↓
-¿Hay irregularidad?
-      ↓
-     Sí
-      ↓
-Capturar foto con GPS
-      ↓
-Agregar nota breve
-      ↓
-Enviar fiscalización
-      ↓
-Ver confirmación de sincronización
-```
-
-**Task Flow 2: Monitoreo y Creación de Pautas (Administrador)**
-
-```text
-Inicio de sesión
-      ↓
-Revisar dashboard de alertas
-      ↓
-Ir a gestión de pautas
-      ↓
-Crear nueva pauta dinámica
-      ↓
-Asignar pauta a un contrato / inspector
-      ↓
-Guardar
-      ↓
-Pauta disponible para el dispositivo móvil
-```
-
-### 5. Puntos críticos de interacción
-
-1. **Captura fotográfica y GPS:** se distinguen dos fallas posibles, cada una con una respuesta distinta:
-   - **Permisos denegados o desactivados** (cámara/ubicación): la interfaz debe notificar claramente al inspector y redirigirlo a la configuración del dispositivo/app para reactivarlos, ya que sin ellos no es posible capturar evidencia.
-   - **GPS sin señal o precisión insuficiente** (ej. interior de un recinto, zona con mala cobertura): el sistema no debe bloquear la captura de la foto. Debe permitir tomarla y marcarla como *"pendiente de georreferenciación"*, reintentando obtener las coordenadas en segundo plano y completándolas automáticamente en cuanto haya señal (aprovechando la misma lógica de sincronización diferida de RNF-05). El inspector debe ver un aviso indicando que la ubicación quedó pendiente, para que no asuma que la evidencia ya es válida.
-2. **Sincronización de datos:** enviar los datos del checklist con imágenes puede fallar si la conexión a internet es inestable en terreno. Se debe proveer retroalimentación visual (spinners/loaders) clara, además de la persistencia local definida en RNF-05.
-3. **Dashboard administrativo:** la sobrecarga visual al mostrar múltiples contratos puede ser un problema. Se requiere un diseño limpio y el uso de gráficos resumidos antes del desglose en tablas.
-
-### 6. Justificación técnica
-
-- **Usabilidad:** la navegación móvil del inspector se basa en Tabs, priorizando accesos directos a las tareas más frecuentes (pautas del día, captura de evidencia) con áreas táctiles amplias, coherente con RNF-03.
-- **Eficiencia de interacción:** el flujo de fiscalización evita pasos innecesarios entre marcar un ítem y capturar evidencia, reduciendo el tiempo que el inspector permanece expuesto en terreno.
-- **Claridad estructural:** la separación de rutas mediante `react-router` (y `@ionic/react-router`) garantiza que la navegación móvil (Tabs, rol Inspector) y la navegación web (Sidebar, rol Administrador) ofrezcan la mejor experiencia según el dispositivo, evitando que funcionalidades administrativas se filtren hacia la app del inspector.
-- **Escalabilidad:** al limitar el acceso por rol desde el enrutador (en vez de ocultar solo visualmente componentes), la arquitectura permite agregar nuevos roles o funcionalidades (ej. un rol de supervisor) sin reestructurar la navegación existente.
 
 ---
 
-## Bocetos UI/UX
+## Bocetos UI/UX y Modelo de Datos
 
-[Figma - Prototipo de UI/UX](https://www.figma.com/design/yoc5pehmU9PGZSjwTFNxPU/Proyecto---Web-Movil?node-id=0-1&p=f&t=B8jeTx6zWYywgnmk-0)
+### Prototipos Web y Móvil en Figma
+- **Enlace público a Figma:** [Figma — Prototipos Web y Móvil SIFCOM](https://www.figma.com/design/MJbonacpaS2avT47w2sBir/Prototipos-web?node-id=14-9&t=zaWmh2SCHCK5laF5-0)
+
+![Prototipos Web y Móvil SIFCOM](./docs/prototipos-web.png)
+
+### Modelo Entidad-Relación (MER) de la Base de Datos
+
+![Modelo Entidad-Relación SIFCOM](./docs/mer-sifcom.png)
 
 ---
 
 ## Tecnologías y herramientas
 
-### Frontend
-| Tecnología | Propósito |
+| Capa | Tecnologías principales |
 |---|---|
-| React | Librería base para la construcción de componentes. |
-| `@ionic/react` | Componentes UI nativos optimizados para móvil y web (`IonPage`, `IonContent`, `IonTabs`, etc.). |
-| `react-router-dom` / `@ionic/react-router` | Gestión de rutas públicas, protegidas y redirecciones obligatorias. |
-| Tailwind CSS | Estilización modular sin afectar el scope global. |
-| Axios / Fetch | Consumo de la API REST. |
+| **Frontend (`rama frontend`)** | Ionic React (`@ionic/react` v9), React 19, TypeScript, React Router v6, Axios, Chart.js (`react-chartjs-2`), Vite 8. |
+| **Backend (`rama backend`)** | Node.js, Express 5, PostgreSQL (`pg`), JSON Web Tokens (`jsonwebtoken`), `bcryptjs`, `cors`, `dotenv`. |
+| **Diseño y Pruebas** | Figma (UI/UX móvil y web), Postman / Insomnia (pruebas funcionales de API REST). |
 
-### Despliegue
-- Docker y docker-compose (RNF-01), para orquestar frontend, backend y base de datos.
+---
+
+## Instrucciones de instalación y ejecución
+
+### 1. Levantar la Base de Datos y el Backend (`rama backend`)
+
+```bash
+git clone https://github.com/nico0417/sifcom.git
+cd sifcom
+git checkout backend
+
+# (Opcional) Ejecutar el script SQL directamente en PostgreSQL:
+psql -U postgres -c "CREATE DATABASE sifcom;"
+psql -U postgres -d sifcom -f schema.sql
+
+# Configurar variables de entorno e iniciar la API en http://localhost:4000
+cp .env.example .env
+npm install
+npm run dev
+```
+
+### 2. Levantar la Aplicación Web/Móvil (`rama frontend`)
+
+En otra terminal:
+
+```bash
+git clone https://github.com/nico0417/sifcom.git sifcom-frontend
+cd sifcom-frontend
+git checkout frontend
+
+cp .env.example .env
+npm install
+npm run dev
+```
+
+Abrir en el navegador `http://localhost:5173`.
+
+### 3. Credenciales de prueba precargadas
+
+| Rol | Correo | Contraseña |
+|---|---|---|
+| **Administrador Municipal (`ADMIN`)** | `admin@sifcom.cl` | `Admin1234` |
+| **Inspector en Terreno (`INSPECTOR`)** | `inspector@sifcom.cl` | `Inspector1234` |
