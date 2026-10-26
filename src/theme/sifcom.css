@@ -1,0 +1,552 @@
+.sifcom-page ion-header,
+.sifcom-page ion-toolbar {
+  --background: #1f2a40;
+  --border-width: 0;
+  --min-height: 0;
+  --padding-top: 0;
+  --padding-bottom: 0;
+  height: 0;
+  min-height: 0;
+  box-shadow: none;
+  overflow: hidden;
+}
+
+.sifcom-content {
+  --background: #1f2a40;
+  --padding-bottom: 72px;
+}
+
+ion-tabs {
+  background: #1f2a40;
+}
+
+.sifcom-menu {
+  --background: #1f2a40;
+  --ion-background-color: #1f2a40;
+  --ion-toolbar-background: #1f2a40;
+  --ion-item-background: #1f2a40;
+}
+
+.sifcom-menu ion-header,
+.sifcom-menu ion-toolbar {
+  --background: #1f2a40;
+  --border-width: 0;
+  --min-height: 48px;
+  background: #1f2a40;
+  box-shadow: none;
+}
+
+.sifcom-menu ion-title {
+  color: #e8eef4;
+}
+
+.sifcom-menu ion-content {
+  --background: #1f2a40;
+  --padding-top: 8px;
+  --padding-bottom: 8px;
+  background: #1f2a40;
+}
+
+.sifcom-menu-list {
+  background: transparent;
+  padding: 8px 0;
+}
+
+.sifcom-menu ion-item {
+  --background: #1f2a40;
+  --background-activated: #3d5473;
+  --background-hover: #3d5473;
+  --background-focused: #3d5473;
+  --color: #e8eef4;
+  --border-color: transparent;
+  --inner-border-width: 0;
+  --ripple-color: transparent;
+  margin: 4px 10px;
+  border-radius: 12px;
+}
+
+.sifcom-menu ion-item::part(native) {
+  background: #1f2a40;
+  border-color: transparent;
+}
+
+.sifcom-wrap {
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 4px 16px 8px;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.sifcom-logo,
+.sifcom-logo-desktop {
+  display: block;
+  background: transparent;
+  border-radius: 0;
+  overflow: visible;
+}
+
+.sifcom-logo {
+  width: 118px;
+  margin: 8px auto 4px;
+}
+
+.sifcom-title {
+  margin: 0 0 12px;
+  text-align: center;
+  color: #d5dee8;
+  font-size: 1.45rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.sifcom-panel {
+  background: #3d5473;
+  border-radius: 32px;
+  padding: 16px 14px 18px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sifcom-section-title {
+  margin: 0 0 4px;
+  text-align: center;
+  color: #d7e3f0;
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.main-tab-bar {
+  --background: #1d2b44;
+  --border: 0;
+  background: #1d2b44;
+  border: 2px solid #8aa4c2;
+  border-radius: 22px;
+  height: 56px;
+  width: calc(100% - 24px);
+  max-width: 420px;
+  margin: 0 auto 8px;
+  padding: 4px 6px;
+  box-sizing: border-box;
+}
+
+.main-tab-bar ion-tab-button {
+  --ripple-color: transparent;
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 0;
+  --padding-bottom: 0;
+  flex: 1;
+  max-width: none;
+  margin: 0;
+  height: 44px;
+}
+
+.main-tab-bar ion-tab-button.tab-selected {
+  background: #3d5473;
+  border-radius: 10px;
+}
+
+.main-tab-bar .tab-img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  display: block;
+  border-radius: 8px;
+}
+
+.sifcom-desktop-header {
+  display: none;
+}
+
+.sifcom-form > label {
+  display: block;
+  color: #e8eef4;
+  font-size: 0.92rem;
+  font-weight: 600;
+  margin: 8px 0 6px;
+}
+
+.sifcom-form ion-input,
+.sifcom-form ion-select,
+.sifcom-form ion-textarea {
+  --background: #ffffff;
+  --color: #222222;
+  --placeholder-color: #888888;
+  --padding-start: 14px;
+  --padding-end: 14px;
+  --border-radius: 12px;
+  --highlight-color-focused: transparent;
+  --ion-text-color: #222222;
+  background: #ffffff;
+  color: #222222;
+  caret-color: #222222;
+  border-radius: 12px;
+  margin: 0 0 4px;
+  min-height: 44px;
+  color-scheme: light;
+}
+
+.sifcom-form ion-input::part(native),
+.sifcom-form ion-textarea::part(native) {
+  color: #222222;
+  -webkit-text-fill-color: #222222;
+}
+
+.sifcom-form ion-select::part(text) {
+  color: #222222;
+}
+
+.sifcom-form ion-select::part(placeholder) {
+  color: #888888;
+}
+
+.sifcom-form ion-textarea {
+  min-height: 72px;
+}
+
+.sifcom-gps {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  color: #666;
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 0.82rem;
+  margin-bottom: 8px;
+}
+
+.sifcom-check-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: #e8eef4;
+  font-size: 0.92rem;
+  font-weight: 500;
+  margin: 8px 0;
+}
+
+.sifcom-check-row input {
+  width: 18px;
+  height: 18px;
+  margin: 0 4px 0 2px;
+  flex-shrink: 0;
+  accent-color: #2e7d32;
+}
+
+.sifcom-file {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 14px;
+  margin: 0 0 4px;
+  background: #ffffff;
+  border-radius: 12px;
+  color: #555555;
+  -webkit-text-fill-color: #555555;
+  font-weight: 600;
+  font-size: 0.92rem;
+  text-align: center;
+  cursor: pointer;
+  color-scheme: light;
+}
+
+.sifcom-file input {
+  display: none;
+}
+
+.sifcom-submit {
+  --background: #000;
+  --color: #fff;
+  --border-radius: 999px;
+  margin-top: 16px;
+  font-weight: 700;
+}
+
+.sifcom-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sifcom-item {
+  background: #e9eef4;
+  border-radius: 16px;
+  padding: 12px 14px;
+  color: #4a6a63;
+}
+
+.sifcom-item h3 {
+  margin: 0 0 6px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #3e5c56;
+}
+
+.sifcom-item p {
+  margin: 3px 0;
+  font-size: 0.78rem;
+}
+
+.sifcom-item-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.sifcom-item-actions button {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: #3e5c56;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.sifcom-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dot-alerta {
+  background: #f5c242;
+}
+
+.dot-ok {
+  background: #3cb371;
+}
+
+.dot-multa {
+  background: #e74c3c;
+}
+
+.admin-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 8px 4px 12px;
+}
+
+.admin-actions ion-button {
+  --background: #e9eef4;
+  --color: #4a5d72;
+  --border-radius: 18px;
+  --box-shadow: none;
+  height: 64px;
+  font-weight: 600;
+  text-transform: none;
+}
+
+.perfil-avatar {
+  display: block;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #fff;
+  margin: 4px auto 8px;
+  border: 4px solid #5d7a9a;
+}
+
+.perfil-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 18px 18px 20px;
+  color: #222;
+  text-align: left;
+}
+
+.perfil-card h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.perfil-hint {
+  margin: 4px 0 16px;
+  color: #888;
+  font-size: 0.85rem;
+}
+
+.perfil-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px 24px;
+}
+
+.perfil-card ion-input,
+.perfil-card ion-select {
+  --background: #f0f0f0;
+  --color: #222222;
+  --placeholder-color: #9a9a9a;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --highlight-color-focused: transparent;
+  --ion-text-color: #222222;
+  background: #f0f0f0;
+  border-radius: 12px;
+  min-height: 44px;
+  color-scheme: light;
+}
+
+.perfil-card ion-input::part(native) {
+  color: #222222;
+  -webkit-text-fill-color: #222222;
+}
+
+.perfil-card .permiso-locked {
+  --background: #e8e8e8;
+  --color: #333;
+  opacity: 1;
+  pointer-events: none;
+}
+
+.perfil-save {
+  --background: #4a6584;
+  --color: #fff;
+  --border-radius: 10px;
+  display: block;
+  margin: 18px auto 0;
+  width: 220px;
+  text-transform: none;
+  font-weight: 600;
+}
+
+.perfil-logout {
+  margin-top: 12px;
+  text-align: center;
+}
+
+.perfil-logout button {
+  background: none;
+  border: 0;
+  color: #6b6b6b;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+@media (min-width: 768px) {
+  .sifcom-desktop-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 32px 8px 18px;
+    flex-shrink: 0;
+  }
+
+  .sifcom-desktop-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 200px;
+  }
+
+  .sifcom-menu-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #d5dee8;
+    font-size: 0.72rem;
+  }
+
+  .sifcom-menu-block ion-menu-button {
+    --color: #ffffff;
+    margin: 0;
+    height: 48px;
+    width: 48px;
+  }
+
+  .sifcom-logo-desktop {
+    width: 96px;
+  }
+
+  .sifcom-title-desktop {
+    flex: 1;
+    margin: 0;
+    text-align: center;
+    color: #d5dee8;
+    font-size: 1.7rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+  }
+
+  .sifcom-desktop-user {
+    min-width: 120px;
+    text-align: center;
+    color: #d5dee8;
+    font-size: 0.78rem;
+  }
+
+  .sifcom-desktop-user p {
+    margin: 6px 0 0;
+  }
+
+  .sifcom-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #ffffff;
+  }
+
+  .sifcom-logo,
+  .sifcom-title {
+    display: none;
+  }
+
+  .sifcom-content::part(scroll) {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sifcom-wrap {
+    max-width: 1280px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 10px 40px 28px;
+  }
+
+  .sifcom-panel {
+    max-width: 720px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .home-grid {
+    max-width: 1100px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+  }
+
+  .perfil-panel {
+    max-width: 960px;
+  }
+
+  .perfil-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .main-tab-bar {
+    display: none !important;
+  }
+}

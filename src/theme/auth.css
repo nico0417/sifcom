@@ -1,0 +1,171 @@
+.auth-content {
+  --background: #1f2a40;
+}
+
+.auth-wrap {
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.auth-logo {
+  display: block;
+  width: 160px;
+  margin: 12px auto 20px;
+  border-radius: 0;
+  overflow: visible;
+  background: transparent;
+}
+
+.auth-card {
+  background: #fff;
+  border-radius: 24px;
+  padding: 24px 20px 28px;
+}
+
+.auth-card h1 {
+  margin: 0;
+  font-size: 1.6rem;
+}
+
+.auth-subtitle,
+.hint {
+  color: #888;
+  font-size: 0.8rem;
+  margin-top: 0;
+}
+
+.auth-card ion-button {
+  --background: #000;
+  --color: #fff;
+  --border-radius: 999px;
+  font-weight: 700;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.auth-card ion-input,
+.auth-card ion-select {
+  display: block;
+  min-height: 48px;
+  margin: 0 0 8px;
+  background: #f0f0f0;
+  border-radius: 12px;
+  overflow: hidden;
+  --background: #f0f0f0;
+  --border-radius: 12px;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --highlight-height: 0;
+  --highlight-color-focused: transparent;
+  --highlight-color-valid: transparent;
+  --highlight-color-invalid: transparent;
+  --border-width: 0;
+  --box-shadow: none;
+}
+
+.auth-card ion-input.input-error,
+.auth-card ion-select.input-error {
+  border: 2px solid #e53935;
+}
+
+.field-error {
+  margin: -4px 0 8px 4px;
+  color: #e53935;
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+
+.form-banner {
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.form-banner-error {
+  background: #fdecea;
+  color: #b71c1c;
+  border: 1px solid #f5c6cb;
+}
+
+.form-banner-ok {
+  background: #e8f5e9;
+  color: #1b5e20;
+  border: 1px solid #c8e6c9;
+}
+
+.field-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #222;
+}
+
+.required {
+  color: #e53935;
+}
+
+.auth-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 5px;
+  margin-top: 12px;
+}
+
+.terms,
+.login-link {
+  margin: 0;
+  text-align: center;
+  color: #888;
+  font-size: 0.9rem;
+}
+.login-link a {
+  color: #6b6b6b;
+  text-decoration: none;
+  font-weight: 550;
+}
+
+.auth-page ion-header,
+.auth-page ion-toolbar {
+  --background: #e8e8e8;
+  --border-width: 0;
+  --min-height: 0;
+  box-shadow: none;
+}
+
+.auth-card ion-input.has-focus {
+  --placeholder-opacity: 0;
+  --placeholder-color: transparent;
+}
+
+@media (min-width: 768px) {
+  .auth-split .auth-wrap {
+    max-width: 960px;
+    min-height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 48px;
+    padding: 40px 32px;
+  }
+
+  .auth-split .auth-logo {
+    width: 420px;
+    max-width: none;
+    margin: 0;
+    flex-shrink: 0;
+  }
+
+  .auth-split .auth-card {
+    width: 100%;
+    max-width: 420px;
+    flex: 0 1 420px;
+  }
+}

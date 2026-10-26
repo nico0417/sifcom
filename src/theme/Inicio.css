@@ -1,0 +1,500 @@
+.inicio-page ion-header,
+.inicio-page ion-toolbar {
+  --background: #1f2a40;
+  --border-width: 0;
+  --min-height: 0;
+  --padding-top: 0;
+  --padding-bottom: 0;
+  height: 0;
+  min-height: 0;
+  box-shadow: none;
+  overflow: hidden;
+}
+
+.inicio-content {
+  --background: #1f2a40;
+  --padding-bottom: 4px;
+}
+
+ion-tabs {
+  background: #1f2a40;
+}
+
+.inicio-wrap {
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 4px 16px 8px;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.inicio-logo {
+  display: block;
+  width: 88px;
+  margin: 8px auto 12px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.inicio-title {
+  margin: 0 0 16px;
+  text-align: center;
+  color: #c5d0dc;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.inicio-panel {
+  background: #3d5473;
+  border-radius: 32px;
+  padding: 12px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.inicio-card {
+  --background: transparent;
+  --color: #e8eef4;
+  background: transparent;
+  margin: 0 0 12px;
+  box-shadow: none;
+  border: 2px solid #8aa4c2;
+  border-radius: 28px;
+  overflow: visible;
+}
+
+.inicio-card:last-child {
+  margin-bottom: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.inicio-card:last-child ion-card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 8px;
+  padding-bottom: 16px;
+}
+
+.inicio-title-bottom {
+  margin-top: 16px;
+  margin-bottom: 4px;
+  padding-top: 0;
+  text-align: center;
+  color: #e8eef4;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.main-tab-bar {
+  --background: #1d2b44;
+  --border: 0;
+  background: #1d2b44;
+  border: 2px solid #8aa4c2;
+  border-radius: 22px;
+  height: 56px;
+  width: calc(100% - 24px);
+  max-width: 420px;
+  margin: 0 auto 8px;
+  padding: 4px 8px;
+  box-sizing: border-box;
+}
+
+.main-tab-bar ion-tab-button {
+  --ripple-color: transparent;
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 0;
+  --padding-bottom: 0;
+  flex: 1;
+  max-width: none;
+  margin: 0;
+  height: 44px;
+}
+
+.main-tab-bar ion-tab-button.tab-selected {
+  background: #3d5a80;
+  border-radius: 10px;
+}
+
+.main-tab-bar .tab-img {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  display: block;
+}
+
+.inicio-card ion-card-title {
+  color: #e8eef4;
+  font-size: 1.05rem;
+  text-align: center;
+}
+
+.inicio-total {
+  margin: 8px 0 0;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #ffffff;
+}
+
+.pie-layout {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 180px;
+  padding: 0 12px;
+}
+
+.pie-canvas {
+  width: 132px;
+  height: 132px;
+}
+
+.pie-label {
+  position: absolute;
+  margin: 0;
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.3;
+  max-width: 92px;
+  -webkit-text-fill-color: #ffffff;
+}
+
+.pie-label-left {
+  left: 8px;
+  bottom: 22px;
+  text-align: left;
+}
+
+.pie-label-right {
+  right: 8px;
+  top: 28px;
+  text-align: left;
+}
+
+.bars-chart {
+  display: flex;
+  gap: 6px;
+  min-height: 190px;
+  padding: 4px 0 0;
+}
+
+.bars-y {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: #ffffff;
+  font-size: 0.58rem;
+  text-align: right;
+  padding: 4px 0 22px;
+  min-width: 58px;
+  white-space: nowrap;
+}
+
+.bars-plot {
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.bars-grid {
+  position: absolute;
+  inset: 4px 0 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.bars-grid i {
+  display: block;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.bars-row {
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  padding: 8px 8px 0;
+  min-height: 150px;
+}
+
+.bar-col {
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.iso-bar {
+  position: relative;
+  width: 36px;
+  background: linear-gradient(180deg, #7ec4d4 0%, #4e96a8 100%);
+  border-radius: 1px 0 0 0;
+}
+
+.iso-top {
+  position: absolute;
+  top: -10px;
+  left: 0;
+  width: 36px;
+  height: 10px;
+  background: #9fd4e0;
+  transform: skewX(-32deg);
+  transform-origin: bottom left;
+}
+
+.iso-side {
+  position: absolute;
+  top: -5px;
+  right: -10px;
+  width: 10px;
+  height: calc(100% + 5px);
+  background: #3a7384;
+  transform: skewY(-32deg);
+  transform-origin: top left;
+}
+
+.bars-x {
+  display: flex;
+  justify-content: space-around;
+  color: #ffffff;
+  font-size: 0.62rem;
+  padding-top: 6px;
+}
+
+.inicio-desktop-header,
+.inicio-kicker {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .inicio-desktop-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 40px 8px 18px;
+    flex-shrink: 0;
+  }
+
+  .inicio-desktop-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 200px;
+  }
+
+  .inicio-menu-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #d5dee8;
+    font-size: 0.72rem;
+  }
+
+  .inicio-menu-block ion-menu-button {
+    --color: #ffffff;
+    margin: 0;
+    height: 48px;
+    width: 48px;
+  }
+
+  .inicio-logo-desktop {
+    width: 118px;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .inicio-title-desktop {
+    flex: 1;
+    margin: 0;
+    text-align: center;
+    color: #c5d0dc;
+    font-size: 1.7rem;
+    font-weight: 500;
+  }
+
+  .inicio-desktop-user {
+    min-width: 120px;
+    text-align: center;
+    color: #d5dee8;
+    font-size: 0.78rem;
+  }
+
+  .inicio-desktop-user p {
+    margin: 6px 0 0;
+  }
+
+  .inicio-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #ffffff;
+  }
+
+  .inicio-logo,
+  .inicio-title {
+    display: none;
+  }
+
+  .inicio-content::part(scroll) {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .inicio-kicker {
+    display: block;
+    grid-column: 1 / -1;
+    margin: 0 0 4px;
+    text-align: center;
+    color: #e8eef4;
+    font-size: 1.15rem;
+    letter-spacing: 0.35em;
+    text-decoration: underline;
+    text-underline-offset: 8px;
+  }
+
+  .inicio-wrap {
+    max-width: 1280px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 10px 40px 28px;
+    min-height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .inicio-panel {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 22px;
+    align-items: stretch;
+    padding: 18px 28px 24px;
+    flex: 0 0 auto;
+    min-height: 0;
+    margin-top: auto;
+    margin-bottom: auto;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .inicio-card {
+    margin: 0;
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    box-sizing: border-box;
+    padding: 16px 20px 18px;
+  }
+
+  .inicio-card ion-card-header {
+    padding-top: 4px;
+    padding-bottom: 0;
+    flex-shrink: 0;
+  }
+
+  .inicio-card ion-card-title {
+    font-size: 1.2rem;
+  }
+
+  .inicio-card ion-card-content,
+  .inicio-card:last-child ion-card-content {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: 8px;
+    padding-bottom: 0;
+  }
+
+  .inicio-card:last-child {
+    flex: unset;
+    height: auto;
+  }
+
+  .pie-layout {
+    flex: 0 0 auto;
+    min-height: 0;
+    width: 100%;
+    max-width: 560px;
+    margin: 12px auto 0;
+    padding: 0 20px;
+  }
+
+  .pie-canvas {
+    width: 232px;
+    height: 232px;
+    flex-shrink: 0;
+  }
+
+  .pie-label-left {
+    left: 20px;
+    bottom: 36px;
+  }
+
+  .pie-label-right {
+    right: 20px;
+    top: 48px;
+  }
+
+  .bars-chart {
+    flex: 0 0 auto;
+    width: 100%;
+    height: 300px;
+    min-height: 300px;
+    max-height: 300px;
+    margin: 8px auto 0;
+  }
+
+  .bars-row {
+    min-height: 0;
+  }
+
+  .iso-bar {
+    width: 58px;
+  }
+
+  .iso-top {
+    width: 58px;
+  }
+
+  .iso-side {
+    width: 12px;
+    right: -12px;
+  }
+
+  .inicio-title-bottom {
+    margin-top: 12px;
+    margin-bottom: 4px;
+    flex-shrink: 0;
+    font-size: 1.35rem;
+  }
+
+  .inicio-total {
+    flex-shrink: 0;
+    margin-top: 12px;
+    font-size: 0.9rem;
+  }
+
+  .main-tab-bar {
+    display: none !important;
+  }
+}
