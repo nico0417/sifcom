@@ -1,0 +1,126 @@
+{
+  "info": {
+    "name": "SIFCOM — Colección de Pruebas API REST (EP2)",
+    "description": "Pruebas funcionales de Autenticación JWT, Roles (ADMIN / INSPECTOR), CRUD de Contratos, Checklists, Fiscalizaciones, Multas y controles de seguridad OWASP API 2023.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:4000/api" },
+    { "key": "tokenAdmin", "value": "" },
+    { "key": "tokenInspector", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "1. Healthcheck (/api/health)",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/health"
+      }
+    },
+    {
+      "name": "2. Registro de Usuario Inspector (POST /auth/register)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"Nombre\": \"Juan Pérez\",\n  \"Comuna\": \"Valparaíso\",\n  \"Email\": \"juan.perez@sifcom.cl\",\n  \"Contrasena\": \"Fiscaliza2026\"\n}"
+        },
+        "url": "{{baseUrl}}/auth/register"
+      }
+    },
+    {
+      "name": "3. Login Administrador (POST /auth/login)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"Email\": \"admin@sifcom.cl\",\n  \"Contrasena\": \"Admin1234\"\n}"
+        },
+        "url": "{{baseUrl}}/auth/login"
+      }
+    },
+    {
+      "name": "4. Login Inspector (POST /auth/login)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"Email\": \"inspector@sifcom.cl\",\n  \"Contrasena\": \"Inspector1234\"\n}"
+        },
+        "url": "{{baseUrl}}/auth/login"
+      }
+    },
+    {
+      "name": "5. Listar Contratos (GET /contratos)",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{tokenAdmin}}" }],
+        "url": "{{baseUrl}}/contratos"
+      }
+    },
+    {
+      "name": "6. Crear Contrato como Admin (POST /contratos)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{tokenAdmin}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"Empresa\": \"Mantenciones Costeras SpA\",\n  \"Giro\": \"Contrato Mantención Plazas Sector Puerto\",\n  \"Presupuesto\": 150000000,\n  \"Vigencia\": \"2026-12-31\"\n}"
+        },
+        "url": "{{baseUrl}}/contratos"
+      }
+    },
+    {
+      "name": "7. Rechazo 403 al Crear Contrato como Inspector (POST /contratos)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{tokenInspector}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"Empresa\": \"Intento No Autorizado\",\n  \"Giro\": \"Prueba Rol\",\n  \"Presupuesto\": 1000,\n  \"Vigencia\": \"2026-12-31\"\n}"
+        },
+        "url": "{{baseUrl}}/contratos"
+      }
+    },
+    {
+      "name": "8. Validación 400 Bad Request por ID inválido (GET /contratos/abc)",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{tokenAdmin}}" }],
+        "url": "{{baseUrl}}/contratos/abc"
+      }
+    },
+    {
+      "name": "9. Crear Fiscalización en Terreno (POST /fiscalizaciones)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{tokenInspector}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"IdContrato\": 1,\n  \"Obra\": \"Plaza Victoria - Sector Pileta\",\n  \"Ubicacion\": \"Ubicación GPS Detectada (-33.045, -71.619)\",\n  \"Foto\": \"evidencia_plaza_victoria.jpg\",\n  \"Observaciones\": \"Riego operativo, pendiente poda menor\",\n  \"Estado\": \"ALERTA\",\n  \"Respuestas\": [\n    { \"IdChecklist\": 1, \"Cumple\": true },\n    { \"IdChecklist\": 2, \"Cumple\": true },\n    { \"IdChecklist\": 3, \"Cumple\": false }\n  ]\n}"
+        },
+        "url": "{{baseUrl}}/fiscalizaciones"
+      }
+    },
+    {
+      "name": "10. Listar Multas y Trazabilidad (GET /multas)",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{tokenAdmin}}" }],
+        "url": "{{baseUrl}}/multas"
+      }
+    }
+  ]
+}

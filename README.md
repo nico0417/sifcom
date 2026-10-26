@@ -1,304 +1,202 @@
-# SIFCOM — Sistema de Fiscalización en Terreno de Contratos Municipales
+# SIFCOM — Backend API REST y Modelo de Base de Datos Relacional
 
 ## Presentado por
 - Nicolás Alejandro Leiva Aguilar
+- Ricardo Andrés Pastén Oblitas
+
+### Distribución de responsabilidades
+
+| Integrante | Rol en el equipo | Responsabilidades principales |
+|---|---|---|
+| **Nicolás Alejandro Leiva Aguilar** | Arquitectura Backend, Modelo de Datos y Seguridad | Diseño del modelo relacional y script `schema.sql`, construcción del servidor en Node.js + Express, autenticación con `bcrypt` y `JWT`, controles de seguridad OWASP API 2023 y pruebas de endpoints. |
+| **Ricardo Andrés Pastén Oblitas** | Diseño del MER, Integración REST y Validaciones | Modelado Entidad-Relación (MER), definición de contratos JSON entre frontend y backend, integración de servicios CRUD (`contratos`, `fiscalizaciones`, `multas`, `perfil`) y pruebas funcionales. |
+
+---
 
 ## Índice
-1. [Descripción general del sistema](#descripción-general-del-sistema)
-2. [Justificación del problema](#justificación-del-problema)
-3. [Objetivos del proyecto](#objetivos-del-proyecto)
-4. [Usuarios objetivo](#usuarios-objetivo-quién-usará-la-aplicación)
-5. [Roles del sistema](#roles-del-sistema)
-6. [Proto-personas](#proto-personas)
-7. [Requerimientos](#requerimientos)
-    - [Requerimientos funcionales por rol](#requerimientos-funcionales-por-rol)
-    - [Funcionalidades transversales](#funcionalidades-transversales)
-    - [Requerimientos no funcionales](#requerimientos-no-funcionales)
-8. [Arquitectura de Navegación / UX](#arquitectura-de-navegación)
-    - [Rutas principales y secundarias](#1-rutas-principales-y-secundarias)
-    - [Relaciones jerárquicas entre vistas](#2-relaciones-jerárquicas-entre-vistas)
-    - [Diferenciación de acceso por roles](#3-diferenciación-de-acceso-según-roles)
-    - [Flujos de tareas](#4-flujos-de-tareas)
-    - [Puntos críticos de interacción](#5-puntos-críticos-de-interacción)
-    - [Justificación técnica](#6-justificación-técnica)
-9. [Bocetos UI/UX](#bocetos-uiux)
-10. [Tecnologías y herramientas](#tecnologías-y-herramientas)
+1. [Descripción general del Backend](#descripción-general-del-backend)
+2. [Modelo Entidad-Relación (MER)](#modelo-entidad-relación-mer)
+3. [Diseño de Base de Datos Relacional y Claves (`schema.sql`)](#diseño-de-base-de-datos-relacional-y-claves-schemasql)
+4. [Seguridad Aplicada y Mitigación OWASP API Security 2023](#seguridad-aplicada-y-mitigación-owasp-api-security-2023)
+5. [Catálogo y Contrato de Endpoints API REST](#catálogo-y-contrato-de-endpoints-api-rest)
+6. [Estructura modular del servidor](#estructura-modular-del-servidor)
+7. [Instrucciones de instalación, configuración y ejecución](#instrucciones-de-instalación-configuración-y-ejecución)
+8. [Pruebas funcionales en Postman / Insomnia](#pruebas-funcionales-en-postman--insomnia)
 
 ---
 
-## Descripción general del sistema
+## Descripción general del Backend
 
-**SIFCOM** (Sistema de Fiscalización de Contratos Municipales) es una plataforma compuesta por una aplicación **móvil** (para inspectores municipales) y una aplicación **web** (para administradores municipales) que permite digitalizar, estandarizar y georreferenciar la supervisión en terreno de contratos de servicios externalizados (recolección de basura, mantenimiento de áreas verdes, obras, entre otros).
+Esta rama (`backend`) contiene el servidor **API RESTful** de **SIFCOM** (Sistema de Fiscalización en Terreno de Contratos Municipales), desarrollado con **Node.js**, **Express** y **PostgreSQL**.
 
-La aplicación centraliza en tiempo real la evidencia recogida por los inspectores (checklists, fotografías georreferenciadas y observaciones) para que los administradores municipales puedan monitorear el cumplimiento contractual, generar alertas ante incumplimientos y respaldar con evidencia la aplicación de multas o la evaluación de futuras licitaciones.
-
----
-
-## Justificación del problema
-
-A nivel municipal, existe una carencia generalizada para medir la eficiencia y el impacto de la gestión, lo que impide la toma de decisiones basada en evidencia. Uno de los focos más críticos son los problemas en la gestión de contratos de servicios externalizados (ej. recolección de basura, mantenimiento de áreas verdes, obras).
-
-Las municipalidades enfrentan graves dificultades para supervisar y controlar eficazmente la calidad de estos servicios en terreno, lo que deriva en un mal servicio entregado a la ciudadanía a pesar de los altos costos financieros invertidos.
-
-En este contexto, el problema abordado por el proyecto corresponde a la necesidad de digitalizar, estandarizar y georreferenciar la recolección de evidencia empírica en terreno, consolidando esta información en tiempo real para facilitar la aplicación de multas justificadas o mejoras en las licitaciones. El desarrollo de una plataforma web (para administración) y móvil (para inspectores) permitirá centralizar la gestión y garantizar la transparencia del cumplimiento de los contratos.
-
-> Fuentes: Guía Metodológica de Calidad de Servicio del Ministerio de Hacienda; documentación sobre Desafíos Públicos Locales.
+El servidor gestiona la persistencia relacional de usuarios, contratos municipales, listas de verificación (*checklists*), fiscalizaciones en terreno y multas asociadas, proveyendo autenticación mediante **JSON Web Tokens (JWT)**, cifrado de contraseñas con **bcrypt**, autorización diferenciada por roles (`INSPECTOR` y `ADMIN`) y controles activos frente a las vulnerabilidades **OWASP API Security Top 10 (2023): API1, API2, API4, API8 y API9**.
 
 ---
 
-## Objetivos del proyecto
+## Modelo Entidad-Relación (MER)
 
-### Objetivo general
-Desarrollar una plataforma web y móvil que permita digitalizar y centralizar la fiscalización en terreno de contratos municipales, facilitando la trazabilidad de la evidencia y la toma de decisiones basada en datos.
+El modelo conceptual del dominio se compone de **5 entidades principales** (`Usuario`, `Contrato`, `Checklist`, `Fiscalizacion` y `Multa`) y sus relaciones con cardinalidades explícitas:
 
-### Objetivos específicos
-- Permitir a los inspectores completar checklists de fiscalización y capturar evidencia fotográfica georreferenciada directamente desde el dispositivo móvil.
-- Consolidar en un panel administrativo el nivel de cumplimiento de los contratos vigentes, con alertas automáticas ante incumplimientos.
-- Garantizar la trazabilidad de las fiscalizaciones realizadas, permitiendo su consulta por fecha, contrato o inspector.
-- Diferenciar el acceso y las funcionalidades disponibles según el rol del usuario autenticado (inspector / administrador).
-- Reducir el tiempo y la dependencia de registros en papel durante el proceso de fiscalización en terreno.
+![Modelo Entidad-Relación de SIFCOM](./docs/mer-sifcom.png)
 
----
-
-## Usuarios objetivo (Quién usará la aplicación)
-
-La aplicación considera dos grupos principales de usuarios: **Inspectores en Terreno** y **Administradores Municipales**.
-
-### Inspectores en Terreno
-Son el personal operativo desplegado en la comuna. Requieren interfaces rápidas, intuitivas y adaptadas para su uso en exteriores, a menudo bajo condiciones de luz solar intensa o **conectividad intermitente**. Necesitan reducir el tiempo que dedican a redactar informes en papel y agilizar la captura de pruebas (fotos y GPS).
-
-### Administradores Municipales
-Son los encargados de gestionar los presupuestos y evaluar a las empresas contratistas. Operan desde oficinas gubernamentales utilizando computadores de escritorio. Necesitan visualizar datos consolidados, métricas de cumplimiento y recibir alertas tempranas sobre servicios deficientes para tomar decisiones estratégicas.
+### Relaciones y cardinalidades del MER
+1. **`Usuario` `(1,1)` — *Fiscalizar* — `(0,N)` `Fiscalizacion`:** Un usuario autenticado puede registrar cero o muchas fiscalizaciones; cada fiscalización pertenece a un único autor responsable.
+2. **`Contrato` `(1,1)` — *Evalúa* — `(0,N)` `Fiscalizacion`:** Un contrato municipal puede ser evaluado en cero o muchas fiscalizaciones; cada fiscalización evalúa un único contrato.
+3. **`Checklist` `(1,N)` — *Items* — `(1,N)` `Contrato`:** Relación muchos a muchos (`N:M`) entre los ítems de verificación y los contratos municipales, resuelta en el modelo físico mediante la tabla intermedia `itemschecklist`.
+4. **`Fiscalizacion` `(1,1)` — *Genera* — `(0,1)` `Multa`:** Una fiscalización con incumplimiento grave puede generar hasta una multa asociada.
+5. **`Contrato` `(1,1)` — *Sanciona* — `(0,N)` `Multa`:** Un contrato municipal puede acumular cero o muchas multas a lo largo de su vigencia; toda multa sanciona obligatoriamente a un contrato.
 
 ---
 
-## Roles del Sistema
+## Diseño de Base de Datos Relacional y Claves (`schema.sql`)
 
-- **Inspector en Terreno**: usuario móvil encargado de acudir a los puntos de la comuna, completar checklists y levantar evidencia fotográfica.
-- **Administrador Municipal**: usuario web encargado de crear pautas, asignar fiscalizaciones y monitorear el desempeño global de los contratos.
+El archivo reproducible **`schema.sql`** ubicado en la raíz de esta rama crea las tablas en **PostgreSQL**, declara todas las **Claves Primarias (`PRIMARY KEY`)**, **Claves Foráneas (`FOREIGN KEY`)**, restricciones de unicidad (`UNIQUE`) y dominio (`CHECK`), e inserta los datos iniciales de prueba (*seed*).
 
----
+### Diccionario de Tablas y Keys
 
-## Proto-personas
-
-> Nota: las siguientes proto-personas corresponden a caracterizaciones preliminares basadas en fuentes secundarias (Guía Metodológica de Calidad de Servicio del Ministerio de Hacienda y Desafíos Públicos Locales) y **no representan resultados de entrevistas a usuarios reales**.
-
-### Proto-persona 1: El Inspector Operativo
-
-**Nombre ficticio:** Carlos
-**Tipo de usuario o rol:** Inspector en Terreno
-
-**Características generales:** funcionario de 45 años. Realiza sus rondas en camioneta o a pie. Acostumbra llevar registros en libretas, lo que retrasa su flujo de trabajo.
-
-**Necesidades principales:** reportar el estado de un servicio in situ mediante toques rápidos en la pantalla, sin escribir textos largos.
-
-**Objetivos de uso:** validar el estado de los servicios, tomar fotografías como prueba irrefutable y terminar su ruta eficientemente.
-
-**Dificultades o puntos de frustración:** perder anotaciones, lidiar con interfaces móviles complejas al sol, o que los contratistas rechacen las multas por falta de pruebas concretas.
-
-**Dispositivo y contexto:** smartphone corporativo de gama media, uso al aire libre.
+| Tabla SQL | Entidad / Relación MER | Clave Primaria (PK) | Claves Foráneas (FK) | Restricciones (`UNIQUE` / `CHECK`) |
+|---|---|---|---|---|
+| **`usuario`** | Entidad `Usuario` | `iduser` (`SERIAL PK`) | — | `email UNIQUE NOT NULL`<br>`CHECK (permisosuser IN ('ADMIN', 'INSPECTOR'))` |
+| **`contrato`** | Entidad `Contrato` | `idcontrato` (`SERIAL PK`) | — | `CHECK (presupuesto >= 0)` |
+| **`checklist`** | Entidad `Checklist` | `idchecklist` (`SERIAL PK`) | — | `descripcion UNIQUE NOT NULL` |
+| **`itemschecklist`** | Relación `Items` (`N:M`) | `(idchecklist, idcontrato)` (`PK Compuesta`) | `idchecklist` → `checklist(idchecklist)`<br>`idcontrato` → `contrato(idcontrato)` | `ON DELETE CASCADE` |
+| **`fiscalizacion`** | Entidad `Fiscalizacion` | `idfiscalizacion` (`SERIAL PK`) | `iduser` → `usuario(iduser)`<br>`idcontrato` → `contrato(idcontrato)` | `CHECK (estado IN ('CUMPLE', 'ALERTA', 'MULTA', 'PENDIENTE'))` |
+| **`fiscalizacion_checklist`** | Respuestas de ítems en `Fiscalizacion` | `(idfiscalizacion, idchecklist)` (`PK Compuesta`) | `idfiscalizacion` → `fiscalizacion(idfiscalizacion)`<br>`idchecklist` → `checklist(idchecklist)` | `cumple BOOLEAN NOT NULL` |
+| **`multa`** | Entidad `Multa` + Relaciones `Sanciona` y `Genera` | `idmulta` (`SERIAL PK`) | `idcontrato` → `contrato(idcontrato)` (`NOT NULL`)<br>`idfiscalizacion` → `fiscalizacion(idfiscalizacion)` (`NOT NULL`) | `idfiscalizacion UNIQUE`<br>`CHECK (monto > 0)` |
 
 ---
 
-### Proto-persona 2: La Estratega Administrativa
+## Seguridad Aplicada y Mitigación OWASP API Security 2023
 
-**Nombre ficticio:** Valeria
-**Tipo de usuario o rol:** Administrador Municipal
+El backend fue diseñado aplicando defensas específicas contra **Inyección SQL** y las vulnerabilidades **OWASP API Security Top 10 (2023)** solicitadas:
 
-**Características generales:** jefa de Departamento de 38 años. Debe rendir cuentas sobre el presupuesto invertido en licitaciones y responder a los reclamos ciudadanos.
-
-**Necesidades principales:** tener una vista panorámica y en tiempo real del cumplimiento de las empresas externas.
-
-**Objetivos de uso:** configurar checklists, monitorear el rendimiento mediante dashboards y justificar la aplicación de sanciones con evidencia clara.
-
-**Dificultades o puntos de frustración:** recibir reclamos por servicios no prestados y carecer de información centralizada para verificar si la empresa realmente ejecutó el trabajo.
-
-**Dispositivo y contexto:** computador de escritorio en oficina municipal.
-
----
-
-## Requerimientos
-
-### Requerimientos funcionales por rol
-
-| ID | Requerimiento funcional | Rol |
+| Categoría OWASP 2023 | Riesgo que previene | Implementación técnica en `sifcom-backend` |
 |---|---|---|
-| **RF-01** | El sistema debe permitir crear listas de verificación (checklists) dinámicas y asignarlas a contratos específicos. | Administrador |
-| **RF-02** | El sistema debe proveer un panel de control (dashboard) que consolide el nivel de cumplimiento global y el estado de los contratos. | Administrador |
-| **RF-03** | El sistema debe generar alertas visuales automáticas cuando una fiscalización obtenga un porcentaje de cumplimiento inferior al umbral definido. | Administrador |
-| **RF-04** | El sistema debe permitir completar las pautas asignadas marcando el estado de cumplimiento de cada ítem desde la aplicación móvil. | Inspector |
-| **RF-05** | El sistema debe permitir capturar fotografías georreferenciadas (GPS) y anexarlas automáticamente a un ítem fiscalizado. | Inspector |
-| **RF-06** | El sistema debe permitir ingresar comentarios u observaciones breves in situ para detallar irregularidades encontradas. | Inspector |
-| **RF-07** | El sistema debe permitir consultar el historial y trazabilidad de inspecciones filtrando por fecha, contrato o inspector. | Ambos |
-
-### Funcionalidades transversales
-
-Estas funcionalidades son necesarias para el funcionamiento general de la aplicación, pero no forman parte de los siete requerimientos funcionales principales del dominio.
-
-- **FT-01:** el sistema deberá permitir el registro de usuarios.
-- **FT-02:** el sistema deberá permitir iniciar sesión mediante credenciales.
-- **FT-03:** el sistema deberá restringir las funcionalidades de acuerdo con el rol del usuario autenticado.
-
-### Requerimientos no funcionales
-
-| ID | Categoría | Descripción |
-|---|---|---|
-| **RNF-01** | Arquitectura | El frontend debe usar componentes nativos de Ionic y el despliegue general (frontend, backend, BD) debe orquestarse con Docker y Docker-compose. |
-| **RNF-02** | Seguridad | Las contraseñas deben cifrarse con bcrypt y la API debe protegerse mediante autenticación JWT y prevención de SQL Injection. |
-| **RNF-03** | Usabilidad | La interfaz móvil del inspector debe poseer áreas táctiles amplias para facilitar su uso a una sola mano en exteriores. |
-| **RNF-04** | Rendimiento | El tiempo de sincronización de una fiscalización desde el dispositivo a la base de datos no debe superar los 5 segundos bajo conectividad estable. |
-| **RNF-05** | Disponibilidad | La aplicación móvil debe permitir capturar checklists y fotografías **sin conexión a internet**, almacenando la información localmente y sincronizándola automáticamente con el servidor en cuanto se recupere la conectividad, sin pérdida de evidencia. |
+| **API1:2023 — Broken Object Level Authorization (BOLA)** | Que un inspector acceda o modifique reportes o perfiles de otros usuarios manipulando IDs en la ruta o en el cuerpo JSON. | - El identificador del usuario autenticado se obtiene exclusivamente del token verificado (`req.user.IdUser`), ignorando cualquier `IdUser` enviado en `req.body`.<br>- En `GET /api/fiscalizaciones` y `GET /api/fiscalizaciones/:id`, si el rol es `INSPECTOR`, la consulta SQL filtra por `WHERE f.iduser = $1` y rechaza con `403 Forbidden` el acceso a reportes ajenos.<br>- En `GET/PUT /api/usuarios/perfil`, solo se consulta y actualiza la fila de `req.user.IdUser`. |
+| **API2:2023 — Broken Authentication** | Almacenamiento inseguro de contraseñas, tokens sin expiración, ataques de fuerza bruta o auto-asignación de rol `ADMIN` al registrarse. | - Contraseñas cifradas con **`bcryptjs` (`cost = 10`)** y política mínima de **8 caracteres + 1 número**.<br>- En `POST /api/auth/register` el servidor asigna de forma fija `permisosuser = 'INSPECTOR'`, impidiendo escalación de privilegios.<br>- Tokens JWT firmados con algoritmo explícito **`HS256`** y expiración de **`2 horas` (`expiresIn: '2h'`)**.<br>- Limitador de intentos (`authLimiter`: máx. 15 peticiones / 15 min por IP) y mensaje uniforme `"Credenciales inválidas"` (`401`). |
+| **API4:2023 — Unrestricted Resource Consumption** | Denegación de servicio por cuerpos JSON excesivamente grandes, ráfagas masivas de peticiones o consultas sin cota de filas. | - Límite estricto en el parser JSON: `express.json({ limit: '100kb' })` (devuelve `413 Payload Too Large` si se excede).<br>- Middleware `createRateLimiter` global en `/api` (`120 req/min` por IP, respondiendo `429 Too Many Requests` con cabecera `Retry-After`).<br>- Cláusula `LIMIT` acotada (`máx. 200` registros) en listados de fiscalizaciones y multas. |
+| **API8:2023 — Security Misconfiguration** | Exposición de cabeceras del servidor, CORS permisivo o filtración de errores internos de PostgreSQL/stacktraces al cliente. | - Desactivación de firma del servidor con `app.disable('x-powered-by')` y aplicación de cabeceras seguras (`X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy`).<br>- Configuración de `cors()` restringida a la lista blanca `ALLOWED_ORIGINS`.<br>- Middleware `errorHandler` que registra el error en consola del servidor pero devuelve al cliente un mensaje genérico seguro en estado `500`. |
+| **API9:2023 — Improper Inventory Management** | Rutas de depuración expuestas con datos sensibles o respuestas HTML no controladas en rutas inexistentes. | - Montaje ordenado de recursos bajo `/api` y `/api/v1`.<br>- El endpoint `/api/health` verifica conectividad sin exponer nombres internos de base de datos ni variables de entorno.<br>- Middleware `notFoundHandler` que responde en JSON estándar `404` ante cualquier ruta o verbo no registrado. |
+| **Prevención de SQL Injection** | Inyección de comandos SQL a través de `req.body`, `req.params` o `req.query`. | - Uso exclusivo de consultas parametrizadas (`$1, $2, ...`) con el driver `pg` (`Pool`) y validación previa de enteros positivos en `req.params.id` (`parsePositiveIntParam` → `400 Bad Request`). |
 
 ---
 
-## Arquitectura de Navegación
+## Catálogo y Contrato de Endpoints API REST
 
-### 1. Rutas principales y secundarias
+Todas las rutas están disponibles bajo `/api` (y versionadas en `/api/v1`):
 
-**Rutas públicas**
-
-| Ruta | Descripción |
-|---|---|
-| `/login` | Inicio de sesión. |
-| `/registro` | Creación de cuentas. |
-
-**Rutas protegidas (Inspector)**
-
-| Ruta | Descripción |
-|---|---|
-| `/inspector/inicio` | Resumen de pautas asignadas para el día. |
-| `/inspector/pautas` | Listado completo de pautas pendientes. |
-| `/inspector/pautas/:id` | Formulario de checklist y captura de fotos. |
-| `/inspector/historial` | Fiscalizaciones completadas por el usuario. |
-
-**Rutas protegidas (Administrador)**
-
-| Ruta | Descripción |
-|---|---|
-| `/admin/inicio` | Dashboard de métricas y alertas. |
-| `/admin/contratos` | Gestión de empresas y contratos vigentes. |
-| `/admin/pautas` | Creación y asignación de checklists. |
-| `/admin/historial` | Auditoría global de todas las fiscalizaciones. |
-
-### 2. Relaciones jerárquicas entre vistas
-
-```text
-Aplicación
-│
-├── Rutas públicas
-│   ├── Login
-│   └── Registro
-│
-└── Rutas protegidas
-    │
-    ├── Inspector
-    │   ├── Inicio (pautas del día)
-    │   ├── Pautas pendientes
-    │   │   └── Detalle de pauta (checklist + fotos GPS)
-    │   └── Historial
-    │
-    └── Administrador
-        ├── Inicio (dashboard de alertas)
-        ├── Contratos
-        ├── Pautas (creación y asignación)
-        └── Historial (auditoría global)
-```
-
-### 3. Diferenciación de acceso según roles
-
-| Funcionalidad | Inspector | Administrador |
-|---|:---:|:---:|
-| Ver pautas asignadas | ✓ | — |
-| Completar checklist | ✓ | — |
-| Capturar foto georreferenciada | ✓ | — |
-| Agregar observaciones | ✓ | — |
-| Ver historial propio | ✓ | — |
-| Crear/editar contratos | — | ✓ |
-| Crear/asignar pautas | — | ✓ |
-| Ver dashboard de cumplimiento | — | ✓ |
-| Auditar historial global | — | ✓ |
-
-**Inspector:** solo tiene acceso a visualizar las pautas que se le han asignado, completarlas, adjuntar fotos y ver su propio historial. No puede crear contratos ni modificar pautas maestras.
-
-**Administrador:** tiene acceso global para gestionar contratos, crear checklists, ver dashboards y auditar a todos los inspectores. No llena pautas en terreno.
-
-### 4. Flujos de tareas
-
-**Task Flow 1: Ejecución de Fiscalización en Terreno (Inspector)**
-
-```text
-Inicio de sesión
-      ↓
-Ver pautas del día
-      ↓
-Seleccionar pauta pendiente
-      ↓
-Marcar ítems (Cumple / No Cumple)
-      ↓
-¿Hay irregularidad?
-      ↓
-     Sí
-      ↓
-Capturar foto con GPS
-      ↓
-Agregar nota breve
-      ↓
-Enviar fiscalización
-      ↓
-Ver confirmación de sincronización
-```
-
-**Task Flow 2: Monitoreo y Creación de Pautas (Administrador)**
-
-```text
-Inicio de sesión
-      ↓
-Revisar dashboard de alertas
-      ↓
-Ir a gestión de pautas
-      ↓
-Crear nueva pauta dinámica
-      ↓
-Asignar pauta a un contrato / inspector
-      ↓
-Guardar
-      ↓
-Pauta disponible para el dispositivo móvil
-```
-
-### 5. Puntos críticos de interacción
-
-1. **Captura fotográfica y GPS:** se distinguen dos fallas posibles, cada una con una respuesta distinta:
-   - **Permisos denegados o desactivados** (cámara/ubicación): la interfaz debe notificar claramente al inspector y redirigirlo a la configuración del dispositivo/app para reactivarlos, ya que sin ellos no es posible capturar evidencia.
-   - **GPS sin señal o precisión insuficiente** (ej. interior de un recinto, zona con mala cobertura): el sistema no debe bloquear la captura de la foto. Debe permitir tomarla y marcarla como *"pendiente de georreferenciación"*, reintentando obtener las coordenadas en segundo plano y completándolas automáticamente en cuanto haya señal (aprovechando la misma lógica de sincronización diferida de RNF-05). El inspector debe ver un aviso indicando que la ubicación quedó pendiente, para que no asuma que la evidencia ya es válida.
-2. **Sincronización de datos:** enviar los datos del checklist con imágenes puede fallar si la conexión a internet es inestable en terreno. Se debe proveer retroalimentación visual (spinners/loaders) clara, además de la persistencia local definida en RNF-05.
-3. **Dashboard administrativo:** la sobrecarga visual al mostrar múltiples contratos puede ser un problema. Se requiere un diseño limpio y el uso de gráficos resumidos antes del desglose en tablas.
-
-### 6. Justificación técnica
-
-- **Usabilidad:** la navegación móvil del inspector se basa en Tabs, priorizando accesos directos a las tareas más frecuentes (pautas del día, captura de evidencia) con áreas táctiles amplias, coherente con RNF-03.
-- **Eficiencia de interacción:** el flujo de fiscalización evita pasos innecesarios entre marcar un ítem y capturar evidencia, reduciendo el tiempo que el inspector permanece expuesto en terreno.
-- **Claridad estructural:** la separación de rutas mediante `react-router` (y `@ionic/react-router`) garantiza que la navegación móvil (Tabs, rol Inspector) y la navegación web (Sidebar, rol Administrador) ofrezcan la mejor experiencia según el dispositivo, evitando que funcionalidades administrativas se filtren hacia la app del inspector.
-- **Escalabilidad:** al limitar el acceso por rol desde el enrutador (en vez de ocultar solo visualmente componentes), la arquitectura permite agregar nuevos roles o funcionalidades (ej. un rol de supervisor) sin reestructurar la navegación existente.
+| Método | Endpoint | Autenticación / Rol | Entrada (`params` / `body`) | Respuestas HTTP |
+|---|---|---|---|---|
+| `GET` | `/api/health` | Pública | — | `200 OK` `{ ok: true, status: "healthy" }` |
+| `POST` | `/api/auth/register` | Pública (con Rate Limit) | **Body:** `{ Nombre, Comuna, Email, Contrasena }` | `201 Created` · `400 Bad Request` · `409 Conflict` · `429 Too Many Requests` |
+| `POST` | `/api/auth/login` | Pública (con Rate Limit) | **Body:** `{ Email, Contrasena }` | `200 OK` `{ ok: true, token, user }` · `400` · `401 Unauthorized` |
+| `GET` | `/api/usuarios/perfil` | JWT (`INSPECTOR` / `ADMIN`) | **Header:** `Authorization: Bearer <token>` | `200 OK` · `401 Unauthorized` |
+| `PUT` | `/api/usuarios/perfil` | JWT (`INSPECTOR` / `ADMIN`) | **Body:** `{ Nombre, Email, Comuna, Contrasena? }` | `200 OK` · `400` · `401` · `409 Conflict` |
+| `GET` | `/api/contratos` | JWT (`INSPECTOR` / `ADMIN`) | — | `200 OK` (Lista de contratos) · `401` |
+| `GET` | `/api/contratos/:id` | JWT (`INSPECTOR` / `ADMIN`) | **Param:** `:id` (entero positivo) | `200 OK` · `400 Bad Request` · `404 Not Found` |
+| `GET` | `/api/contratos/:id/checklists` | JWT (`INSPECTOR` / `ADMIN`) | **Param:** `:id` (entero positivo) | `200 OK` (Ítems de checklist asociados al contrato) |
+| `POST` | `/api/contratos` | JWT (`ADMIN`) | **Body:** `{ Empresa, Giro, Presupuesto, Vigencia }` | `201 Created` · `400` · `401` · `403 Forbidden` |
+| `PUT` | `/api/contratos/:id` | JWT (`ADMIN`) | **Param:** `:id` · **Body:** `{ Empresa, Giro, Presupuesto, Vigencia }` | `200 OK` · `400` · `403` · `404 Not Found` |
+| `DELETE` | `/api/contratos/:id` | JWT (`ADMIN`) | **Param:** `:id` (entero positivo) | `204 No Content` · `400` · `403` · `404 Not Found` |
+| `GET` | `/api/checklists` | JWT (`INSPECTOR` / `ADMIN`) | — | `200 OK` (Catálogo de ítems de verificación) |
+| `GET` | `/api/fiscalizaciones` | JWT (`INSPECTOR` propias / `ADMIN` todas) | **Query opcional:** `?limit=100` | `200 OK` · `401 Unauthorized` |
+| `GET` | `/api/fiscalizaciones/:id` | JWT (Propiedad BOLA o `ADMIN`) | **Param:** `:id` (entero positivo) | `200 OK` · `400` · `403 Forbidden` · `404 Not Found` |
+| `POST` | `/api/fiscalizaciones` | JWT (`INSPECTOR` / `ADMIN`) | **Body:** `{ IdContrato, Obra, Ubicacion?, Foto?, Observaciones?, Estado?, Respuestas? }` | `201 Created` · `400` · `401` · `404` |
+| `PUT` | `/api/fiscalizaciones/:id` | JWT (`ADMIN`) | **Param:** `:id` · **Body:** `{ IdContrato, Obra, Ubicacion?, Foto?, Observaciones?, Estado? }` | `200 OK` · `400` · `403` · `404` |
+| `DELETE` | `/api/fiscalizaciones/:id` | JWT (`ADMIN`) | **Param:** `:id` (entero positivo) | `204 No Content` · `400` · `403` · `404` |
+| `GET` | `/api/multas` | JWT (`INSPECTOR` / `ADMIN`) | — | `200 OK` |
+| `POST` | `/api/multas` | JWT (`ADMIN`) | **Body:** `{ Monto, Motivo, IdContrato, IdFiscalizacion, FechaMulta? }` | `201 Created` · `400` · `403` |
+| `PUT` | `/api/multas/:id` | JWT (`ADMIN`) | **Param:** `:id` · **Body:** `{ Monto, Motivo, IdContrato, IdFiscalizacion }` | `200 OK` · `400` · `403` · `404` |
+| `DELETE` | `/api/multas/:id` | JWT (`ADMIN`) | **Param:** `:id` (entero positivo) | `204 No Content` · `400` · `403` · `404` |
 
 ---
 
-## Bocetos UI/UX
+## Estructura modular del servidor
 
-[Figma - Prototipo de UI/UX](https://www.figma.com/design/yoc5pehmU9PGZSjwTFNxPU/Proyecto---Web-Movil?node-id=0-1&p=f&t=B8jeTx6zWYywgnmk-0)
+```text
+sifcom/ (rama backend)
+├── docs/
+│   ├── mer-sifcom.png                 # Diagrama Entidad-Relación (MER)
+│   └── SIFCOM.postman_collection.json # Colección Postman / Insomnia con 10 pruebas funcionales
+├── src/
+│   ├── config/
+│   │   └── db.js                      # Pool de conexión PostgreSQL e inicialización automática
+│   ├── middlewares/
+│   │   └── security.js                # JWT, roles, rate-limiter, cabeceras, validador de IDs y errores
+│   └── routes/
+│       ├── auth.routes.js             # Registro, login con bcrypt y actualización de perfil
+│       ├── contratos.routes.js        # CRUD de contratos y consulta de checklists
+│       └── fiscalizaciones.routes.js  # CRUD de fiscalizaciones y multas con protección BOLA
+├── .env.example                       # Plantilla de variables de entorno
+├── index.js                           # Punto de entrada de la aplicación Express
+├── package.json                       # Dependencias y scripts de ejecución
+├── README.md                          # Documentación técnica del backend
+└── schema.sql                         # Script SQL reproducible (DDL + PK/FK + datos iniciales)
+```
 
 ---
 
-## Tecnologías y herramientas
+## Instrucciones de instalación, configuración y ejecución
 
-### Frontend
-| Tecnología | Propósito |
-|---|---|
-| React | Librería base para la construcción de componentes. |
-| `@ionic/react` | Componentes UI nativos optimizados para móvil y web (`IonPage`, `IonContent`, `IonTabs`, etc.). |
-| `react-router-dom` / `@ionic/react-router` | Gestión de rutas públicas, protegidas y redirecciones obligatorias. |
-| Tailwind CSS | Estilización modular sin afectar el scope global. |
-| Axios / Fetch | Consumo de la API REST. |
+### 1. Requisitos previos
+- **Node.js:** v20.x o superior.
+- **PostgreSQL:** v14 o superior en ejecución local (`localhost:5432`).
 
-### Despliegue
-- Docker y docker-compose (RNF-01), para orquestar frontend, backend y base de datos.
+### 2. Clonar el repositorio y cambiar a la rama `backend`
+
+```bash
+git clone https://github.com/nico0417/sifcom.git
+cd sifcom
+git checkout backend
+```
+
+### 3. Crear la base de datos y ejecutar `schema.sql`
+
+Puedes cargar manualmente el archivo `schema.sql` en PostgreSQL (además, el servidor verifica e inicializa el esquema y los datos semilla automáticamente al iniciar):
+
+```bash
+psql -U postgres -c "CREATE DATABASE sifcom;"
+psql -U postgres -d sifcom -f schema.sql
+```
+
+### 4. Configurar las variables de entorno (`.env`)
+
+```bash
+cp .env.example .env
+```
+
+Edita `.env` con las credenciales de tu instancia local de PostgreSQL:
+
+```env
+PORT=4000
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=sifcom
+DB_USER=postgres
+DB_PASSWORD=tu_password_postgres
+JWT_SECRET=secreto_jwt_seguro_sifcom_2026
+ALLOWED_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
+```
+
+### 5. Instalar dependencias e iniciar el servidor
+
+```bash
+npm install
+npm run dev
+```
+
+El servidor quedará escuchando en `http://localhost:4000`.
+
+---
+
+## Pruebas funcionales en Postman / Insomnia
+
+En la carpeta `docs/SIFCOM.postman_collection.json` se incluye la colección exportada lista para importar en **Postman** o **Insomnia**.
+
+### Casos de prueba incluidos y verificables:
+1. **Healthcheck (`GET /api/health`):** Verifica respuesta `200 OK` y conexión con PostgreSQL sin exponer datos sensibles.
+2. **Registro de usuario (`POST /api/auth/register`):** Valida creación de cuenta con hash `bcrypt` (`201 Created`) y rechazo `409 Conflict` si el correo se repite.
+3. **Inicio de sesión Admin e Inspector (`POST /api/auth/login`):** Devuelve `200 OK` con token JWT firmado y rol correspondiente (`ADMIN` o `INSPECTOR`).
+4. **Control de acceso por rol (`POST /api/contratos`):** Con `tokenAdmin` responde `201 Created`; con `tokenInspector` responde `403 Forbidden`.
+5. **Validación de parámetros de ruta (`GET /api/contratos/abc`):** Responde `400 Bad Request` indicando que el parámetro `id` debe ser un entero positivo.
+6. **Control BOLA en Fiscalizaciones (`GET /api/fiscalizaciones`):** Un `INSPECTOR` visualiza únicamente sus reportes registrados, mientras que un `ADMIN` audita la totalidad de los reportes y multas.
