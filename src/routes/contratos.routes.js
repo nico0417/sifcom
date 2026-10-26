@@ -106,12 +106,13 @@ router.post(
 
     const nuevoContrato = result.rows[0];
     // Asociar automáticamente los ítems base de checklist al nuevo contrato
-    await pool.query(
-      `INSERT INTO itemschecklist (idchecklist, idcontrato)
-       SELECT idchecklist, $1 FROM checklist
-       ON CONFLICT DO NOTHING`,
-      [nuevoContrato.idcontrato],
-    );
+    const checks = await pool.query('SELECT idchecklist FROM checklist ORDER BY idchecklist');
+    for (const item of checks.rows) {
+      await pool.query(
+        'INSERT INTO itemschecklist (idchecklist, idcontrato) VALUES ($1, $2) ON CONFLICT DO NOTHING',
+        [Number(item.idchecklist), Number(nuevoContrato.idcontrato)],
+      );
+    }
 
     return res.status(201).json(nuevoContrato);
   }),
